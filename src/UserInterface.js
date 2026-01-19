@@ -31,15 +31,12 @@ export default class UserInterface {
         ctx.shadowBlur = 3
         
         // Rita score
-        ctx.fillText(`Score: ${this.game.score}`, 20, 40)
-        
-        // Rita coins collected
-        ctx.fillText(`Coins: ${this.game.coinsCollected}`, 20, 70)
+        ctx.fillText(`Score: ${this.game.score}`, 20, 100)
         
         ctx.restore()
         
         // Rita health bar (egen metod)
-        this.drawHealthBar(ctx, 20, 90)
+        this.drawHealthBar(ctx, 20, 40)
     }
     
     drawHealthBar(ctx, x, y) {

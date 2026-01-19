@@ -1,15 +1,14 @@
 import Level from './Level.js'
 import Platform from '../Platform.js'
-import Coin from '../Coin.js'
 import Enemy from '../Enemy.js'
 import FlyingEnemy from '../FlyingEnemy.js'
 import Background from '../Background.js'
 import BackgroundObject from '../BackgroundObject.js'
-// import blueBg from '../assets/Pixel Adventure 1/Background/Blue.png'
-// import bigClouds from '../assets/clouds/Big Clouds.png'
-// import cloud1 from '../assets/clouds/Small Cloud 1.png'
-// import cloud2 from '../assets/clouds/Small Cloud 2.png'
-// import cloud3 from '../assets/clouds/Small Cloud 3.png'
+import blueBg from '../assets/Pixel Adventure 1/Background/Blue.png'
+import bigClouds from '../assets/clouds/Big Clouds.png'
+import cloud1 from '../assets/clouds/Small Cloud 1.png'
+import cloud2 from '../assets/clouds/Small Cloud 2.png'
+import cloud3 from '../assets/clouds/Small Cloud 3.png'
 
 /**
  * Level 1 - Den första nivån i spelet
@@ -30,7 +29,7 @@ export default class Level1 extends Level {
     createBackgrounds() {
         this.backgrounds = [
             // Far background - blå himmel
-            new Background(this.game, blueBg, {
+            new Background(this.game, null, {
                 tiled: true,
                 tileWidth: 64,
                 tileHeight: 64,
@@ -99,29 +98,6 @@ export default class Level1 extends Level {
             new Platform(this.game, 1750, height - 200, 128, 32, {sprite: {platform: true}}),
             new Platform(this.game, 1950, height - 320, 160, 32, {sprite: {platform: true}}),
             new Platform(this.game, 2150, height - 180, 96, 32, {sprite: {platform: true}}),
-        ]
-    }
-
-    createCoins() {
-        const height = this.game.height
-
-        this.coins = [
-            new Coin(this.game, 200, height - 180),
-            new Coin(this.game, 240, height - 180),
-            new Coin(this.game, 450, height - 240),
-            new Coin(this.game, 150, height - 320),
-            new Coin(this.game, 190, height - 320),
-            new Coin(this.game, 600, height - 200),
-            new Coin(this.game, 380, height - 360),
-            new Coin(this.game, 420, height - 360),
-            // Nya mynt längre bort
-            new Coin(this.game, 950, height - 220),
-            new Coin(this.game, 1150, height - 280),
-            new Coin(this.game, 1350, height - 200),
-            new Coin(this.game, 1550, height - 320),
-            new Coin(this.game, 1800, height - 240),
-            new Coin(this.game, 2000, height - 360),
-            new Coin(this.game, 2200, height - 220),
         ]
     }
 

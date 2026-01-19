@@ -2,10 +2,8 @@ import GameBase from './GameBase.js'
 import Player from './Player.js'
 import Projectile from './Projectile.js'
 import Level1 from './levels/Level1.js'
-import Level2 from './levels/Level2.js'
 import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
-import Level3 from './levels/Level3.js'
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -24,19 +22,14 @@ export default class PlatformerGame extends GameBase {
         // Plattformsspel-specifik fysik
         this.gravity = 0.001 // pixels per millisekund^2
         this.friction = 0.00015 // luftmotstånd för att bromsa fallhastighet
-
-        // Plattformsspel-specifik state
-        this.coinsCollected = 0
-        this.totalCoins = 0 // Sätts när vi skapar coins
         
         // Level management
         this.currentLevelIndex = 0
-        this.levels = [Level1, Level2, Level3] // Array av level-klasser
+        this.levels = [Level1] // Array av level-klasser
         this.currentLevel = null
         
         // Plattformsspel-specifika arrays
         this.platforms = []
-        this.coins = []
         this.projectiles = []
         
         // Background arrays (sätts av levels)
@@ -56,7 +49,6 @@ export default class PlatformerGame extends GameBase {
     init() {
         // Återställ score (men inte game state - det hanteras av constructor/restart)
         this.score = 0
-        this.coinsCollected = 0
         
         // Återställ camera
         this.camera.x = 0
@@ -84,16 +76,11 @@ export default class PlatformerGame extends GameBase {
         
         // Sätt level data
         this.platforms = levelData.platforms
-        this.coins = levelData.coins
         this.enemies = levelData.enemies
-        this.totalCoins = this.coins.length
         
         // Sätt background data
         this.backgrounds = levelData.backgrounds
         this.backgroundObjects = levelData.backgroundObjects
-        
-        // Återställ mynt-räknare för denna level
-        this.coinsCollected = 0
         
         // Skapa player på level spawn position
         this.player = new Player(
@@ -153,7 +140,6 @@ export default class PlatformerGame extends GameBase {
         return this.saveManager.save({
             currentLevelIndex: this.currentLevelIndex,
             score: this.score,
-            coinsCollected: this.coinsCollected,
             health: this.player.health,
             playerX: this.player.x,
             playerY: this.player.y
@@ -182,7 +168,6 @@ export default class PlatformerGame extends GameBase {
         
         // Återställ progress
         this.score = saveData.score
-        this.coinsCollected = saveData.coinsCollected
         
         // Starta spelet
         this.gameState = 'PLAYING'
@@ -247,9 +232,6 @@ export default class PlatformerGame extends GameBase {
         // Uppdatera plattformar (även om de är statiska)
         this.platforms.forEach(platform => platform.update(deltaTime))
         
-        // Uppdatera mynt (plattformsspel-specifikt)
-        this.coins.forEach(coin => coin.update(deltaTime))
-        
         // Uppdatera fiender (med plattformsfysik)
         this.enemies.forEach(enemy => enemy.update(deltaTime))
         
@@ -283,16 +265,6 @@ export default class PlatformerGame extends GameBase {
                 otherEnemy.handleEnemyCollision(enemy)
             })
         })
-
-        // Kontrollera kollision med mynt
-        this.coins.forEach(coin => {
-            if (this.player.intersects(coin) && !coin.markedForDeletion) {
-                // Plocka upp myntet
-                this.score += coin.value
-                this.coinsCollected++
-                coin.collect() // Myntet hanterar sin egen ljud och markering
-            }
-        })
         
         // Kontrollera kollision med fiender
         this.enemies.forEach(enemy => {
@@ -324,7 +296,6 @@ export default class PlatformerGame extends GameBase {
         })
         
         // Ta bort objekt markerade för borttagning
-        this.coins = this.coins.filter(coin => !coin.markedForDeletion)
         this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion)
         this.projectiles = this.projectiles.filter(projectile => !projectile.markedForDeletion)
 
@@ -341,10 +312,10 @@ export default class PlatformerGame extends GameBase {
         this.camera.update(deltaTime)
         
         // Kolla win condition - alla mynt samlade
-        if (this.coinsCollected === this.totalCoins && this.gameState === 'PLAYING') {
-            // Gå till nästa level
-            this.nextLevel()
-        }
+        // if (this.coinsCollected === this.totalCoins && this.gameState === 'PLAYING') {
+        //     // Gå till nästa level
+        //     this.nextLevel()
+        // }
         
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
@@ -367,13 +338,6 @@ export default class PlatformerGame extends GameBase {
         this.platforms.forEach(platform => {
             if (this.camera.isVisible(platform)) {
                 platform.draw(ctx, this.camera)
-            }
-        })
-        
-        // Rita mynt med camera offset
-        this.coins.forEach(coin => {
-            if (this.camera.isVisible(coin)) {
-                coin.draw(ctx, this.camera)
             }
         })
         

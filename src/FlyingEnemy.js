@@ -1,5 +1,5 @@
 import GameObject from "./GameObject"
-// import flyingSprite from "./assets/Pixel Adventure 1/Main Characters/Virtual Guy/Idle (32x32).png"
+import flyingSprite from "./assets/Pixel Adventure 1/Main Characters/Virtual Guy/Idle (32x32).png"
 
 export default class FlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {

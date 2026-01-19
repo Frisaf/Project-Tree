@@ -36,14 +36,6 @@ export default class Level {
 
     /**
      * Abstract method - måste implementeras av subklasser
-     * Skapar mynt för leveln
-     */
-    createCoins() {
-        throw new Error('createCoins() måste implementeras av subklass')
-    }
-
-    /**
-     * Abstract method - måste implementeras av subklasser
      * Skapar fiender för leveln
      */
     createEnemies() {
@@ -73,7 +65,6 @@ export default class Level {
         this.createBackgrounds()
         this.createBackgroundObjects()
         this.createPlatforms()
-        this.createCoins()
         this.createEnemies()
     }
 

@@ -1,4 +1,4 @@
-// import terrain from "./assets/Pixel Adventure 1/Terrain/Terrain (16x16).png"
+import terrain from "./assets/Pixel Adventure 1/Terrain/Terrain (16x16).png"
 
 /**
  * Sprite - För att rita ut statiska bilder och tilade terrängbitar
