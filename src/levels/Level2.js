@@ -4,10 +4,10 @@ import Coin from '../Coin.js'
 import Enemy from '../Enemy.js'
 import Background from '../Background.js'
 import BackgroundObject from '../BackgroundObject.js'
-import pinkBg from '../assets/Pixel Adventure 1/Background/Pink.png'
-import bigClouds from '../assets/clouds/Big Clouds.png'
-import cloud1 from '../assets/clouds/Small Cloud 1.png'
-import cloud2 from '../assets/clouds/Small Cloud 2.png'
+// import pinkBg from '../assets/Pixel Adventure 1/Background/Pink.png'
+// import bigClouds from '../assets/clouds/Big Clouds.png'
+// import cloud1 from '../assets/clouds/Small Cloud 1.png'
+// import cloud2 from '../assets/clouds/Small Cloud 2.png'
 
 /**
  * Level 2 - Andra nivån med svårare utmaningar

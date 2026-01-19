@@ -5,11 +5,11 @@ import Enemy from '../Enemy.js'
 import FlyingEnemy from '../FlyingEnemy.js'
 import Background from '../Background.js'
 import BackgroundObject from '../BackgroundObject.js'
-import blueBg from '../assets/Pixel Adventure 1/Background/Blue.png'
-import bigClouds from '../assets/clouds/Big Clouds.png'
-import cloud1 from '../assets/clouds/Small Cloud 1.png'
-import cloud2 from '../assets/clouds/Small Cloud 2.png'
-import cloud3 from '../assets/clouds/Small Cloud 3.png'
+// import blueBg from '../assets/Pixel Adventure 1/Background/Blue.png'
+// import bigClouds from '../assets/clouds/Big Clouds.png'
+// import cloud1 from '../assets/clouds/Small Cloud 1.png'
+// import cloud2 from '../assets/clouds/Small Cloud 2.png'
+// import cloud3 from '../assets/clouds/Small Cloud 3.png'
 
 /**
  * Level 1 - Den första nivån i spelet

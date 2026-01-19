@@ -4,12 +4,12 @@ import Coin from '../Coin.js'
 import Enemy from '../Enemy.js'
 import Background from '../Background.js'
 import BackgroundObject from '../BackgroundObject.js'
-import greenBg from '../assets/Pixel Adventure 1/Background/Green.png'
-import bigClouds from '../assets/clouds/Big Clouds.png'
-import cloud1 from '../assets/clouds/Small Cloud 1.png'
-import cloud2 from '../assets/clouds/Small Cloud 2.png'
-import FlyingEnemy from '../FlyingEnemy.js'
-import Boss from '../Boss.js'
+// import greenBg from '../assets/Pixel Adventure 1/Background/Green.png'
+// import bigClouds from '../assets/clouds/Big Clouds.png'
+// import cloud1 from '../assets/clouds/Small Cloud 1.png'
+// import cloud2 from '../assets/clouds/Small Cloud 2.png'
+// import FlyingEnemy from '../FlyingEnemy.js'
+// import Boss from '../Boss.js'
 
 export default class Level3 extends Level {
     constructor(game) {
