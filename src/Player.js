@@ -134,6 +134,22 @@ export default class Player extends GameObject {
         // Skjut i senaste riktningen spelaren rörde sig
         const projectileX = this.x + this.width / 2
         const projectileY = this.y + this.height / 2
+
+        const centerX = this.x + this.width / 2
+        const centerY = this.y + this.height / 2
+
+        const mouseWorld = this.game.camera.screenToWorld(
+            this.game.inputHandler.mouseX,
+            this.game.inputHandler.mouseY
+        )
+
+        const dx = mouseWorld.x - centerX
+        const dy = mouseWorld.y - centerY
+        const distance = Math.sqrt(dx * dx + dy * dy)
+        
+        // Normalisera riktningen
+        const directionX = dx / distance
+        const directionY = dy / distance
         
         this.game.addProjectile(projectileX, projectileY, this.lastDirectionX)
         
