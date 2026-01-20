@@ -103,17 +103,48 @@ export default class Level1 extends Level {
 
     createEnemies() {
         const height = this.game.height
+        const spawnPoints = [[200, 220], [1000, 440]]
 
-        this.enemies = [
-            new Enemy(this.game, 200, height - 220, 40, 40, 80),
-            new Enemy(this.game, 450, height - 240, 40, 40),
-            new Enemy(this.game, 360, height - 440, 40, 40, 50),
-            // Nya fiender längre bort
-            new Enemy(this.game, 1000, height - 220, 40, 40, 100),
-            new Enemy(this.game, 1400, height - 200, 40, 40),
-            new Enemy(this.game, 1800, height - 240, 40, 40, 150),
+        this.enemyAmount = Math.floor(4^(this.game.currentWave / 10) + 7)
+        this.enemies = []
 
-            new FlyingEnemy(this.game, 100, height - 400, 40, 40, 100)
-        ]
+        let spawnedEnemies = 0
+
+        console.log(this.enemyAmount)
+
+        if (this.game.currentWave < 3) {
+            for (let i = 0; i <= this.enemyAmount; i++) {
+                const result = Math.random()
+                let spawnX = 0
+                let spawnY = 0
+
+                if (result < 0.5) {
+                    spawnX = spawnPoints[0][0]
+                    spawnY = spawnPoints[0][1]
+                }
+
+                else {
+                    spawnX = spawnPoints[1][0]
+                    spawnY = spawnPoints[1][1]
+                }
+
+                this.enemies.push(new Enemy(this.game, spawnX, height - spawnY, 40, 40))
+                spawnedEnemies += 1
+                console.log(spawnedEnemies)
+                setTimeout(5000)
+            }
+        }
+
+        // this.enemies = [
+        //     new Enemy(this.game, 200, height - 220, 40, 40, 80),
+        //     new Enemy(this.game, 450, height - 240, 40, 40),
+        //     new Enemy(this.game, 360, height - 440, 40, 40, 50),
+        //     // Nya fiender längre bort
+        //     new Enemy(this.game, 1000, height - 220, 40, 40, 100),
+        //     new Enemy(this.game, 1400, height - 200, 40, 40),
+        //     new Enemy(this.game, 1800, height - 240, 40, 40, 150),
+
+        //     new FlyingEnemy(this.game, 100, height - 400, 40, 40, 100)
+        // ]
     }
 }

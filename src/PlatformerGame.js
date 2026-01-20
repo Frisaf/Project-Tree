@@ -29,6 +29,8 @@ export default class PlatformerGame extends GameBase {
         this.currentLevelIndex = 0
         this.levels = [Level1] // Array av level-klasser
         this.currentLevel = null
+
+        this.currentWave = 1
         
         // Plattformsspel-specifika arrays
         this.platforms = []
@@ -105,7 +107,7 @@ export default class PlatformerGame extends GameBase {
         this.camera.targetY = 0
     }
     
-    nextLevel() {
+    nextWave() {
         this.currentLevelIndex++
         
         // Kolla om det finns fler levels
