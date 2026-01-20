@@ -4,6 +4,7 @@ import Projectile from './Projectile.js'
 import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
+import Gun from './Gun.js'
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -89,6 +90,8 @@ export default class PlatformerGame extends GameBase {
             levelData.playerSpawnY, 
             50, 50, 'green'
         )
+
+        this.gun = new Gun(this, levelData.playerSpawnX, levelData.playerSpawnY, 30, 10)
         
         // Återställ projektiler
         this.projectiles = []
@@ -238,6 +241,8 @@ export default class PlatformerGame extends GameBase {
         // Uppdatera spelaren
         this.player.update(deltaTime)
 
+        this.gun.update(deltaTime)
+
         // Antag att spelaren inte står på marken, tills vi hittar en kollision
         this.player.isGrounded = false
 
@@ -357,6 +362,8 @@ export default class PlatformerGame extends GameBase {
         
         // Rita spelaren med camera offset
         this.player.draw(ctx, this.camera)
+
+        this.gun.draw(ctx, this.camera)
         
         // Rita UI sist (utan camera offset - alltid synligt)
         this.ui.draw(ctx)
