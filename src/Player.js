@@ -47,11 +47,11 @@ export default class Player extends GameObject {
 
     update(deltaTime) {
         // Horisontell rörelse
-        if (this.game.inputHandler.keys.has('ArrowLeft')) {
+        if (this.game.inputHandler.keys.has('a')) {
             this.velocityX = -this.moveSpeed
             this.directionX = -1
             this.lastDirectionX = -1 // Spara riktning
-        } else if (this.game.inputHandler.keys.has('ArrowRight')) {
+        } else if (this.game.inputHandler.keys.has('d')) {
             this.velocityX = this.moveSpeed
             this.directionX = 1
             this.lastDirectionX = 1 // Spara riktning
@@ -111,7 +111,7 @@ export default class Player extends GameObject {
         }
         
         // Skjut med X-tangenten
-        if ((this.game.inputHandler.keys.has('x') || this.game.inputHandler.keys.has('X')) && this.canShoot) {
+        if (this.game.inputHandler.mouseButtons.has(0) && this.canShoot) {
             this.shoot()
         }
         
@@ -132,9 +132,6 @@ export default class Player extends GameObject {
     
     shoot() {
         // Skjut i senaste riktningen spelaren rörde sig
-        const projectileX = this.x + this.width / 2
-        const projectileY = this.y + this.height / 2
-
         const centerX = this.x + this.width / 2
         const centerY = this.y + this.height / 2
 
@@ -151,7 +148,7 @@ export default class Player extends GameObject {
         const directionX = dx / distance
         const directionY = dy / distance
         
-        this.game.addProjectile(projectileX, projectileY, this.lastDirectionX)
+        this.game.addProjectile(centerX, centerY, directionX, directionY)
         
         // Sätt cooldown
         this.canShoot = false
