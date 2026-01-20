@@ -113,6 +113,12 @@ export default class Player extends GameObject {
         // Skjut med X-tangenten
         if (this.game.inputHandler.mouseButtons.has(0) && this.canShoot) {
             this.shoot()
+            this.health -= 1
+            if (this.health < 2) {
+                this.invulnerable = true
+                this.invulnerableTimer = 1000
+                this.shootCooldownTimer = 1000   
+            }        
         }
         
         // Uppdatera animation state baserat på movement
@@ -154,7 +160,7 @@ export default class Player extends GameObject {
         this.canShoot = false
         this.shootCooldownTimer = this.shootCooldown
     }
-    
+
     takeDamage(amount) {
         if (this.invulnerable) return
         
@@ -164,6 +170,11 @@ export default class Player extends GameObject {
         // Sätt invulnerability efter att ha tagit skada
         this.invulnerable = true
         this.invulnerableTimer = this.invulnerableDuration
+    }
+
+    gainHealth(healthamount) {
+        if (this.health === this.maxHealth) healthamount = 0
+        this.health += healthamount
     }
     
     handlePlatformCollision(platform) {
