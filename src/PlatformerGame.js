@@ -1,5 +1,6 @@
 import GameBase from './GameBase.js'
 import Player from './Player.js'
+import WaterDrop from './WaterDrop.js'
 import Projectile from './Projectile.js'
 import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
@@ -31,6 +32,7 @@ export default class PlatformerGame extends GameBase {
         // Plattformsspel-specifika arrays
         this.platforms = []
         this.projectiles = []
+        this.WaterDrops = []
         
         // Background arrays (sätts av levels)
         this.backgrounds = []
@@ -283,9 +285,11 @@ export default class PlatformerGame extends GameBase {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion) {
                     enemy.markedForDeletion = true
                     projectile.markedForDeletion = true
+                    this.dropWater(enemy.x, enemy.y)
                     this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50
                 }
             })
+
             
             // Kolla projektil-kollision med plattformar (plattformsspel-specifikt)
             this.platforms.forEach(platform => {
@@ -323,6 +327,12 @@ export default class PlatformerGame extends GameBase {
         }
     }
 
+    dropWater(x, y) {
+        console.log('Water dropped', x, y)
+        const Water = new WaterDrop(this, x, y)
+        this.WaterDrops.push(Water)
+    }
+
     draw(ctx) {
         // Rita backgrounds FÖRST (längst bak)
         this.backgrounds.forEach(bg => bg.draw(ctx, this.camera))
@@ -354,6 +364,10 @@ export default class PlatformerGame extends GameBase {
                 projectile.draw(ctx, this.camera)
             }
         })
+
+        this.WaterDrops.forEach(drop => {
+            drop.draw(ctx, this.camera)
+        } )
         
         // Rita spelaren med camera offset
         this.player.draw(ctx, this.camera)

@@ -113,6 +113,7 @@ export default class Player extends GameObject {
         // Skjut med X-tangenten
         if ((this.game.inputHandler.keys.has('x') || this.game.inputHandler.keys.has('X')) && this.canShoot) {
             this.shoot()
+            this.health -= 1
         }
         
         // Uppdatera animation state baserat på movement
