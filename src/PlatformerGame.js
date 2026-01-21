@@ -6,6 +6,7 @@ import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
+import gunSprite from "./assets/Project Tree/arms1.png"
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -98,8 +99,15 @@ export default class PlatformerGame extends GameBase {
             )
         }
         
+        const gunConfig = {
+            image: gunSprite,
+            sourceWidth: 56,
+            sourceHeight: 21,
+            sourceX: 51,
+            sourceY: 26
+        }
 
-        this.gun = new Gun(this, levelData.playerSpawnX, levelData.playerSpawnY, 30, 10)
+        this.gun = new Gun(this, levelData.playerSpawnX, levelData.playerSpawnY, 56, 21, {sprite: gunConfig})
         
         // Återställ projektiler
         this.projectiles = []

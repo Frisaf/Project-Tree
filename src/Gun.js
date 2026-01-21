@@ -1,11 +1,16 @@
 import GameObject from "./GameObject"
+import Sprite from "./Sprite"
 
 export default class Gun extends GameObject {
-    constructor(game, x, y, width, height) {
+    constructor(game, x, y, width, height, options = {}) {
         super(game, x, y, width, height)
 
         this.color = "blue"
         this.angle = 0
+
+        if (options.sprite) {
+            this.sprite = new Sprite(options.sprite)
+        }
     }
 
     update() {
@@ -26,7 +31,11 @@ export default class Gun extends GameObject {
         ctx.translate(screenX, screenY)
         ctx.rotate(this.angle)
 
-        if (!spriteDrawn) {
+        if (this.sprite && this.sprite.draw(ctx, screenX, screenY, this.width, this.height)) {
+            return
+        }
+
+        else {
             ctx.fillStyle = this.color
             ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height)
         }

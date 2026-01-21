@@ -1,5 +1,5 @@
 import GameObject from './GameObject.js'
-import idleSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Idle (32x32).png'
+import idleSprite from "./assets/Project Tree/idle.png"
 import runSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Run (32x32).png'
 import jumpSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Jump (32x32).png'
 import fallSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Fall (32x32).png'
@@ -37,7 +37,7 @@ export default class Player extends GameObject {
         this.lastDirectionX = 1 // Kom ihåg senaste riktningen för skjutning
         
         // Sprite animation system - ladda sprites med olika hastigheter
-        this.loadSprite('idle', idleSprite, 11, 150)  // Långsammare idle
+        this.loadSprite('idle', idleSprite, 2, 200)  // Långsammare idle
         this.loadSprite('run', runSprite, 12, 80)     // Snabbare spring
         this.loadSprite('jump', jumpSprite, 1)
         this.loadSprite('fall', fallSprite, 1)
