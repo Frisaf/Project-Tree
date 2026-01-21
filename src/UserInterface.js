@@ -32,7 +32,7 @@ export default class UserInterface {
         
         // Rita score
         ctx.fillText(`Score: ${this.game.score}`, 10, 60)
-        ctx.fillText(`WAVE: ${this.game.currentWave}`, 750, 30)
+        ctx.fillText(`WAVE: ${this.game.currentWave}`, 10, 100)
         
         ctx.restore()
         

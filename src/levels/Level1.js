@@ -21,6 +21,8 @@ export default class Level1 extends Level {
         // Player spawn position för denna level
         this.playerSpawnX = 50
         this.playerSpawnY = 50
+
+        this.enemies = []
         
         // Initiera level
         this.init()
@@ -103,35 +105,42 @@ export default class Level1 extends Level {
 
     createEnemies() {
         const height = this.game.height
-        const spawnPoints = [[200, 220], [1000, 440]]
+        const spawnPoints = [[200, 220], [1000, 440], [360, 200], [500, 400]]
 
-        this.enemyAmount = Math.floor(4^(this.game.currentWave / 10) + 7)
-        this.enemies = []
+        function random_choice(array) {
+            const result = array[Math.floor(Math.random() * array.length)]
 
-        let spawnedEnemies = 0
+            return result
+        };
 
-        console.log(this.enemyAmount)
+        let coordinates
 
         if (this.game.currentWave < 3) {
             for (let i = 0; i <= this.enemyAmount; i++) {
-                const result = Math.random()
-                let spawnX = 0
-                let spawnY = 0
+                coordinates = random_choice(spawnPoints)
+
+                let spawnX = coordinates[0]
+                let spawnY = coordinates[1]
+
+                this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(Math.random() * -200), 40, 40))
+            }
+        }
+
+        else {
+            for(let i = 0; i <= this.enemyAmount; i++) {
+                coordinates = random_choice(spawnPoints)
+
+                let spawnX = coordinates[0]
+                let spawnY = coordinates[1]
+                let result = Math.random()
 
                 if (result < 0.5) {
-                    spawnX = spawnPoints[0][0]
-                    spawnY = spawnPoints[0][1]
+                    this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 }
 
                 else {
-                    spawnX = spawnPoints[1][0]
-                    spawnY = spawnPoints[1][1]
+                    this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 }
-
-                this.enemies.push(new Enemy(this.game, spawnX, height - spawnY, 40, 40))
-                spawnedEnemies += 1
-                console.log(spawnedEnemies)
-                setTimeout(5000)
             }
         }
 
