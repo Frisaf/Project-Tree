@@ -136,6 +136,7 @@ export default class PlatformerGame extends GameBase {
     
     restart() {
         this.currentLevelIndex = 0
+        this.currentWave = 1
         this.init()
         this.gameState = 'PLAYING'
         this.currentMenu = null
