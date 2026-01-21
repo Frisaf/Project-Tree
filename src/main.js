@@ -3,8 +3,8 @@ import PlatformerGame from './PlatformerGame.js'
 
 const setupGame = (canvas) => {
     // Sätt storlek på canvas 854x480 (16:9)
-    canvas.width = 1800
-    canvas.height = 800
+    canvas.width = 1283.33
+    canvas.height = 550
     // ctx är "ritkontexten", används för att rita på canvas
     const ctx = canvas.getContext('2d')
 
