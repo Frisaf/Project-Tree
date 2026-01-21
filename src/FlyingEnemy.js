@@ -19,7 +19,25 @@ export default class FlyingEnemy extends GameObject {
         this.bobSpeed = 0.04 // hur snabbt fienden gungar
         this.bobDistance = 10 // hur långt upp/ner fienden rör sig
 
+        this.canShoot = true
+        this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
+        this.shootCooldownTimer = 0
+
         this.loadSprite("fly", flyingSprite, 11, 80)
+    }
+
+    shoot() {
+        const centerX = this.x + this.width / 2
+        const centerY = this.y + this.height / 2
+
+        this.game.addProjectile(centerX, centerY, -1, null, true)
+        this.game.addProjectile(centerX, centerY, 1, null, true)
+        this.game.addProjectile(centerX, centerY, null, -1, true)
+        this.game.addProjectile(centerX, centerY, null, 1, true)
+        
+        // Sätt cooldown
+        this.canShoot = false
+        this.shootCooldownTimer = this.shootCooldown
     }
 
     update(deltaTime) {
@@ -39,6 +57,17 @@ export default class FlyingEnemy extends GameObject {
         this.bobOffset += this.bobSpeed * deltaTime
         this.x += this.velocityX * deltaTime
         this.y += this.bobSpeed * deltaTime
+
+        if (!this.canShoot) {
+        this.shootCooldownTimer -= deltaTime
+            if (this.shootCooldownTimer <= 0) {
+                this.canShoot = true
+            }
+        }
+
+        else (
+            this.shoot()
+        )
 
         this.setAnimation("fly")
         this.updateAnimation(deltaTime)
