@@ -129,8 +129,8 @@ export default class PlatformerGame extends GameBase {
         console.log(this.currentWave)
     }
     
-    addProjectile(x, y, directionX, directionY) {
-        const projectile = new Projectile(this, x, y, directionX, directionY)
+    addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
+        const projectile = new Projectile(this, x, y, directionX, directionY, enemyProjectile)
         this.projectiles.push(projectile)
     }
     
@@ -225,7 +225,7 @@ export default class PlatformerGame extends GameBase {
             this.inputHandler.keys.delete('N')
             
             // Gå till nästa level (loopa runt om nödvändigt)
-            this.currentLevelIndex = (this.currentLevelIndex + 1) % this.levels.length
+            this.currentWave++
             this.loadLevel(this.currentLevelIndex)
             this.gameState = 'PLAYING'
             return
@@ -308,7 +308,7 @@ export default class PlatformerGame extends GameBase {
             
             // Kolla kollision med fiender
             this.enemies.forEach(enemy => {
-                if (projectile.intersects(enemy) && !enemy.markedForDeletion) {
+                if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
                     enemy.markedForDeletion = true
                     this.enemiesDefeated++
                     projectile.markedForDeletion = true
@@ -316,8 +316,7 @@ export default class PlatformerGame extends GameBase {
                     this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50
                 }
             })
-
-            
+        
             // Kolla projektil-kollision med plattformar (plattformsspel-specifikt)
             this.platforms.forEach(platform => {
                 this.projectileX = 0
@@ -331,10 +330,15 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                         this.projectileY = projectile.y
                     }
-                    this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     projectile.markedForDeletion = true
                 }
             })
+
+            if (projectile.enemyProjectile && projectile.intersects(this.player)) {
+                this.player.takeDamage(1)
+                projectile.markedForDeletion = true
+            }
         })
         
         // Ta bort objekt markerade för borttagning
