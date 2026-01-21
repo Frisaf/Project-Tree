@@ -29,6 +29,9 @@ export default class PlatformerGame extends GameBase {
         this.currentLevelIndex = 0
         this.levels = [Level1] // Array av level-klasser
         this.currentLevel = null
+
+        this.currentWave = 1
+        this.enemiesDefeated = 0
         
         // Plattformsspel-specifika arrays
         this.platforms = []
@@ -86,12 +89,15 @@ export default class PlatformerGame extends GameBase {
         this.backgroundObjects = levelData.backgroundObjects
         
         // Skapa player på level spawn position
-        this.player = new Player(
-            this, 
-            levelData.playerSpawnX, 
-            levelData.playerSpawnY, 
-            50, 50, 'green'
-        )
+        if (this.currentWave === 1) {
+            this.player = new Player(
+                this, 
+                levelData.playerSpawnX, 
+                levelData.playerSpawnY, 
+                50, 50, 'green'
+            )
+        }
+        
 
         this.gun = new Gun(this, levelData.playerSpawnX, levelData.playerSpawnY, 30, 10)
         
@@ -99,25 +105,28 @@ export default class PlatformerGame extends GameBase {
         this.projectiles = []
         
         // Återställ camera för ny level
-        this.camera.x = 0
-        this.camera.y = 0
-        this.camera.targetX = 0
-        this.camera.targetY = 0
+        // this.camera.x = 0
+        // this.camera.y = 0
+        // this.camera.targetX = 0
+        // this.camera.targetY = 0
     }
     
-    nextLevel() {
-        this.currentLevelIndex++
-        
+    nextWave() {
         // Kolla om det finns fler levels
-        if (this.currentLevelIndex >= this.levels.length) {
-            // Inga fler levels - spelet är klart!
-            this.gameState = 'WIN'
-            return
-        }
+        // if (this.currentLevelIndex >= this.levels.length) {
+        //     // Inga fler levels - spelet är klart!
+        //     this.gameState = 'WIN'
+        //     return
+        // }
+
+        this.currentWave += 1
+        this.enemiesDefeated = 0
         
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
+
+        console.log(this.currentWave)
     }
     
     addProjectile(x, y, directionX, directionY) {
@@ -300,6 +309,7 @@ export default class PlatformerGame extends GameBase {
             this.enemies.forEach(enemy => {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion) {
                     enemy.markedForDeletion = true
+                    this.enemiesDefeated++
                     projectile.markedForDeletion = true
                     this.dropWater(enemy.x, enemy.y)
                     this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50
@@ -348,6 +358,12 @@ export default class PlatformerGame extends GameBase {
         //     // Gå till nästa level
         //     this.nextLevel()
         // }
+
+        const levelData = this.currentLevel.getData()
+
+        if (this.enemiesDefeated === levelData.enemyAmount + 1) {
+            this.nextWave()
+        }
         
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {

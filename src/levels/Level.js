@@ -24,6 +24,8 @@ export default class Level {
         // Player spawn position
         this.playerSpawnX = 50
         this.playerSpawnY = 50
+
+        this.enemyAmount = Math.floor(4^(this.game.currentWave / 10) + 7)
     }
 
     /**
@@ -74,12 +76,12 @@ export default class Level {
     getData() {
         return {
             platforms: this.platforms,
-            coins: this.coins,
             enemies: this.enemies,
             backgrounds: this.backgrounds,
             backgroundObjects: this.backgroundObjects,
             playerSpawnX: this.playerSpawnX,
-            playerSpawnY: this.playerSpawnY
+            playerSpawnY: this.playerSpawnY,
+            enemyAmount: this.enemyAmount
         }
     }
 }
