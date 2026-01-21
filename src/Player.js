@@ -24,7 +24,7 @@ export default class Player extends GameObject {
         this.jumps = 0
         
         // Health system
-        this.maxHealth = 3
+        this.maxHealth = 20
         this.health = this.maxHealth
         this.invulnerable = false // Immun mot skada efter att ha blivit träffad
         this.invulnerableTimer = 0

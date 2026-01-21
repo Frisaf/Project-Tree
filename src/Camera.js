@@ -22,16 +22,16 @@ export default class Camera {
     
     follow(target) {
         // Beräkna spelarens position relativt till kamerans centrum
-        const targetCenterX = target.x + target.width / 2
-        const targetCenterY = target.y + target.height / 2
+        let targetCenterX = target.x + target.width / 2
+        let targetCenterY = target.y + target.height / 2
         
         // Centrera kameran på spelaren
         this.targetX = targetCenterX - this.width / 2
         this.targetY = targetCenterY - this.height / 2
         
         // Clamp till world bounds
-        this.targetX = Math.max(0, Math.min(this.targetX, this.worldWidth - this.width))
-        this.targetY = Math.max(0, Math.min(this.targetY, this.worldHeight - this.height))
+
+        console.log('following', targetCenterX, targetCenterY)
     }
     
     update(deltaTime) {

@@ -359,7 +359,6 @@ export default class PlatformerGame extends GameBase {
     }
 
     dropWater(x, y) {
-        console.log('Water dropped', x, y)
         const Water = new WaterDrop(this, x, y)
         this.WaterDrops.push(Water)
     }
