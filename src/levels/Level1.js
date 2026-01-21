@@ -21,6 +21,8 @@ export default class Level1 extends Level {
         // Player spawn position för denna level
         this.playerSpawnX = 50
         this.playerSpawnY = 50
+
+        this.enemies = []
         
         // Initiera level
         this.init()
@@ -103,17 +105,55 @@ export default class Level1 extends Level {
 
     createEnemies() {
         const height = this.game.height
+        const spawnPoints = [[200, 220], [1000, 440], [360, 200], [500, 400]]
 
-        this.enemies = [
-            new Enemy(this.game, 200, height - 220, 40, 40, 80),
-            new Enemy(this.game, 450, height - 240, 40, 40),
-            new Enemy(this.game, 360, height - 440, 40, 40, 50),
-            // Nya fiender längre bort
-            new Enemy(this.game, 1000, height - 220, 40, 40, 100),
-            new Enemy(this.game, 1400, height - 200, 40, 40),
-            new Enemy(this.game, 1800, height - 240, 40, 40, 150),
+        function random_choice(array) {
+            const result = array[Math.floor(Math.random() * array.length)]
 
-            new FlyingEnemy(this.game, 100, height - 400, 40, 40, 100)
-        ]
+            return result
+        };
+
+        let coordinates
+
+        if (this.game.currentWave < 3) {
+            for (let i = 0; i <= this.enemyAmount; i++) {
+                coordinates = random_choice(spawnPoints)
+
+                let spawnX = coordinates[0]
+                let spawnY = coordinates[1]
+
+                this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(Math.random() * -200), 40, 40))
+            }
+        }
+
+        else {
+            for(let i = 0; i <= this.enemyAmount; i++) {
+                coordinates = random_choice(spawnPoints)
+
+                let spawnX = coordinates[0]
+                let spawnY = coordinates[1]
+                let result = Math.random()
+
+                if (result < 0.5) {
+                    this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                }
+
+                else {
+                    this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                }
+            }
+        }
+
+        // this.enemies = [
+        //     new Enemy(this.game, 200, height - 220, 40, 40, 80),
+        //     new Enemy(this.game, 450, height - 240, 40, 40),
+        //     new Enemy(this.game, 360, height - 440, 40, 40, 50),
+        //     // Nya fiender längre bort
+        //     new Enemy(this.game, 1000, height - 220, 40, 40, 100),
+        //     new Enemy(this.game, 1400, height - 200, 40, 40),
+        //     new Enemy(this.game, 1800, height - 240, 40, 40, 150),
+
+        //     new FlyingEnemy(this.game, 100, height - 400, 40, 40, 100)
+        // ]
     }
 }
