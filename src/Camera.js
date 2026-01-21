@@ -10,7 +10,7 @@ export default class Camera {
         this.worldHeight = height
         
         // Smooth following
-        this.smoothing = 0.1 // 0-1, högre = snabbare följning
+        this.smoothing = 0.05 // 0-1, högre = snabbare följning
         this.targetX = x
         this.targetY = y
     }
@@ -30,6 +30,12 @@ export default class Camera {
         this.targetY = targetCenterY - this.height / 2
         
         // Clamp till world bounds
+        // this.targetX = Math.max(10, Math.min(this.targetX, this.worldWidth - this.width))
+        // this.targetY = Math.max(10, Math.min(this.targetY, this.worldHeight - this.height))
+        if (targetCenterY > 300) {
+            this.targetY = 50
+        }
+
 
         console.log('following', targetCenterX, targetCenterY)
     }
