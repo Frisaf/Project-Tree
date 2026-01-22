@@ -128,15 +128,14 @@ export default class PlatformerGame extends GameBase {
     }
     
     restart() {
-        this.loadLevel(1)
         this.currentLevelIndex = 0
+        this.currentWave = 1
+        this.enemiesDefeated = 0
+        this.currentMenu = null
+        this.player.maxHealth = 20
+        this.WaterDrops = []
         this.init()
         this.gameState = 'PLAYING'
-        this.currentMenu = null
-        this.player.health = this.player.maxHealth
-        this.WaterDrops.forEach(WaterDrop => {
-                WaterDrop.markedForDeletion = true
-        })
     }
     
     /**
@@ -317,7 +316,6 @@ export default class PlatformerGame extends GameBase {
                 }
             })
 
-            
             // Kolla projektil-kollision med plattformar (plattformsspel-specifikt)
             this.platforms.forEach(platform => {
                 this.projectileX = 0
@@ -331,8 +329,10 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                         this.projectileY = projectile.y
                     }
+                    
                     this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     projectile.markedForDeletion = true
+                    console.log(this.projectileX, this.projectileY)
                 }
             })
         })
