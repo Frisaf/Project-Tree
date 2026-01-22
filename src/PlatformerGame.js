@@ -112,13 +112,6 @@ export default class PlatformerGame extends GameBase {
     }
     
     nextWave() {
-        // Kolla om det finns fler levels
-        // if (this.currentLevelIndex >= this.levels.length) {
-        //     // Inga fler levels - spelet är klart!
-        //     this.gameState = 'WIN'
-        //     return
-        // }
-
         this.currentWave += 1
         this.enemiesDefeated = 0
         
@@ -308,11 +301,18 @@ export default class PlatformerGame extends GameBase {
             // Kolla kollision med fiender
             this.enemies.forEach(enemy => {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion) {
-                    enemy.markedForDeletion = true
-                    this.enemiesDefeated++
-                    projectile.markedForDeletion = true
-                    this.dropWater(enemy.x, enemy.y)
-                    this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50
+                    if (enemy.health < 1) {
+                        enemy.markedForDeletion = true
+                        this.enemiesDefeated++
+                        projectile.markedForDeletion = true
+                        this.dropWater(enemy.x, enemy.y)
+                        this.dropWater(enemy.x-10, enemy.y-10)
+                        this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50    
+                    } else {
+                        enemy.health -= 1
+                        projectile.markedForDeletion = true
+                    }
+                    
                 }
             })
 

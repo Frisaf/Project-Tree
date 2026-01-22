@@ -14,7 +14,7 @@ export default class InputHandler {
 
         window.addEventListener("mousemove", (event) => {
             this.mouseX = event.clientX
-            this.mouseY = event.clientY - 250
+            this.mouseY = event.clientY
         })
 
         window.addEventListener('mousedown', (event) => {

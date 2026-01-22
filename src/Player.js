@@ -114,7 +114,7 @@ export default class Player extends GameObject {
         if (this.game.inputHandler.mouseButtons.has(0) && this.canShoot) {
             this.shoot()
             this.health -= 1
-            if (this.health < 2) {
+            if (this.health <= 2) {
                 this.invulnerable = true
                 this.invulnerableTimer = 1000
                 this.shootCooldownTimer = 1000   
