@@ -23,10 +23,26 @@ export default class Enemy extends GameObject {
         this.damage = 1 // Hur mycket skada fienden gör
         this.drops = 3 // Antal vatten droppar som släpps vid död
 
+        this.canShoot = true
+        this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
+        this.shootCooldownTimer = 0
+
         this.loadSprite("run", runSprite, 12, 80)
         this.loadSprite("fall", fallSprite, 1)
 
         
+    }
+
+    shoot() {
+        const centerX = this.x + this.width / 2
+        const centerY = this.y + this.height / 2
+
+        this.game.addProjectile(centerX, centerY, -1, null, true)
+        this.game.addProjectile(centerX, centerY, 1, null, true)
+        
+        // Sätt cooldown
+        this.canShoot = false
+        this.shootCooldownTimer = this.shootCooldown
     }
 
     update(deltaTime) {
@@ -61,6 +77,17 @@ export default class Enemy extends GameObject {
         // Uppdatera position
         this.x += this.velocityX * deltaTime
         this.y += this.velocityY * deltaTime
+
+        if (!this.canShoot) {
+            this.shootCooldownTimer -= deltaTime
+            if (this.shootCooldownTimer <= 0) {
+                this.canShoot = true
+            }
+        }
+
+        else (
+            this.shoot()
+        )
 
         if (this.velocityX !== 0) {
             this.setAnimation("run")

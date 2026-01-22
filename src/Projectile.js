@@ -1,15 +1,22 @@
 import GameObject from './GameObject.js'
 
 export default class Projectile extends GameObject {
-    constructor(game, x, y, directionX, directionY = 0) {
+    constructor(game, x, y, directionX, directionY = 0, enemyProjectile = false) {
         super(game, x, y, 12, 6)
         this.directionX = directionX // -1 för vänster, 1 för höger
         this.directionY = directionY
         this.speed = 0.5 // pixels per millisekund
         this.startX = x // Spara startposition
         this.startY = y
-        this.maxDistance = 800 // Max en skärm långt
-        this.color = 'orange'
+        this.maxDistance = 1283.33 // Max en skärm långt
+
+        if (!enemyProjectile) {
+            this.color = 'orange'
+        } else {
+            this.color = "#b2d145" // yellow
+        }
+        
+        this.enemyProjectile = enemyProjectile
     }
     
     update(deltaTime) {

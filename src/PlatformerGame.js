@@ -122,8 +122,8 @@ export default class PlatformerGame extends GameBase {
         console.log(this.currentWave)
     }
     
-    addProjectile(x, y, directionX, directionY) {
-        const projectile = new Projectile(this, x, y, directionX, directionY)
+    addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
+        const projectile = new Projectile(this, x, y, directionX, directionY, enemyProjectile)
         this.projectiles.push(projectile)
     }
     
@@ -218,7 +218,7 @@ export default class PlatformerGame extends GameBase {
             this.inputHandler.keys.delete('N')
             
             // Gå till nästa level (loopa runt om nödvändigt)
-            this.currentLevelIndex = (this.currentLevelIndex + 1) % this.levels.length
+            this.currentWave++
             this.loadLevel(this.currentLevelIndex)
             this.gameState = 'PLAYING'
             return
@@ -331,10 +331,16 @@ export default class PlatformerGame extends GameBase {
                     }
                     
                     this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     projectile.markedForDeletion = true
                     console.log(this.projectileX, this.projectileY)
                 }
             })
+
+            if (projectile.enemyProjectile && projectile.intersects(this.player)) {
+                this.player.takeDamage(1)
+                projectile.markedForDeletion = true
+            }
         })
         
         // Ta bort objekt markerade för borttagning
