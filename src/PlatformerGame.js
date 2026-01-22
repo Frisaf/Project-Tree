@@ -7,7 +7,6 @@ import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
 import startGunSprite from "./assets/Project Tree/gun_start.png"
-import flippedStartGunSprite from "./assets/Project Tree/flipped_gun_start.png"
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel

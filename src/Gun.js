@@ -28,12 +28,13 @@ export default class Gun extends GameObject {
         this.angle = Math.atan2(this.mouseY - this.y, this.mouseX - this.x)
         // -1.6 < angle < 1.5
 
-        if (this.angle < -1.6 || this.angle > 1.6) {
-            
-        }
-
         ctx.save()
         ctx.translate(screenX - 25, screenY)
+
+        if (this.angle < -1.6 || this.angle > 1.6) {
+            ctx.scale(1, -1)
+            this.angle *= -1
+        }
 
         ctx.rotate(this.angle)
 
