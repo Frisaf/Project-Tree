@@ -307,8 +307,7 @@ export default class PlatformerGame extends GameBase {
                         enemy.markedForDeletion = true
                         this.enemiesDefeated++
                         projectile.markedForDeletion = true
-                        this.dropWater(enemy.x, enemy.y)
-                        this.dropWater(enemy.x-10, enemy.y-10)
+                        this.dropWater(enemy.x, enemy.y, enemy.drops)
                         this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50    
                     } else {
                         enemy.health -= 1
@@ -376,9 +375,13 @@ export default class PlatformerGame extends GameBase {
         }
     }
 
-    dropWater(x, y) {
-        const Water = new WaterDrop(this, x, y)
-        this.WaterDrops.push(Water)
+    dropWater(x, y, drops) {
+        for (let i = 0; i < drops; i++) {
+            const randomDrop = Math.floor(Math.random() * 15)
+            const Water = new WaterDrop(this, x + i * randomDrop, y + i)
+            this.WaterDrops.push(Water)    
+        }
+        
     }
 
     draw(ctx) {

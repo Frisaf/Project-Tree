@@ -21,9 +21,12 @@ export default class Enemy extends GameObject {
         
         this.health = 1 // Fiendens hälsa
         this.damage = 1 // Hur mycket skada fienden gör
+        this.drops = 2 // Antal vatten droppar som släpps vid död
 
         this.loadSprite("run", runSprite, 12, 80)
         this.loadSprite("fall", fallSprite, 1)
+
+        
     }
 
     update(deltaTime) {

@@ -15,6 +15,7 @@ export default class FlyingEnemy extends GameObject {
         
         this.health = 2 // Fiendens hälsa
         this.damage = 2 // Hur mycket skada fienden gör
+        this.drops = 3 // Antal vatten droppar som släpps vid död
 
         this.bobOffset = 0
         this.bobSpeed = 0.04 // hur snabbt fienden gungar

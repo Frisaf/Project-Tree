@@ -20,6 +20,7 @@ export default class Enemy extends GameObject {
         
         this.health = 10 // Fiendens hälsa
         this.damage = 3 // Hur mycket skada fienden gör
+        this.drops = 15 // Antal vatten droppar som släpps vid död
 
         this.loadSprite("tankidle", tankSprite, 12, 80)
     }
