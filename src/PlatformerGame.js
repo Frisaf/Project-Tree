@@ -112,13 +112,6 @@ export default class PlatformerGame extends GameBase {
     }
     
     nextWave() {
-        // Kolla om det finns fler levels
-        // if (this.currentLevelIndex >= this.levels.length) {
-        //     // Inga fler levels - spelet är klart!
-        //     this.gameState = 'WIN'
-        //     return
-        // }
-
         this.currentWave += 1
         this.enemiesDefeated = 0
         
@@ -137,12 +130,12 @@ export default class PlatformerGame extends GameBase {
     restart() {
         this.currentLevelIndex = 0
         this.currentWave = 1
+        this.enemiesDefeated = 0
+        this.currentMenu = null
+        this.player.maxHealth = 20
+        this.WaterDrops = []
         this.init()
         this.gameState = 'PLAYING'
-        this.currentMenu = null
-        this.WaterDrops.forEach(WaterDrop => {
-                WaterDrop.markedForDeletion = true
-        })
     }
     
     /**
@@ -308,15 +301,21 @@ export default class PlatformerGame extends GameBase {
             
             // Kolla kollision med fiender
             this.enemies.forEach(enemy => {
-                if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
-                    enemy.markedForDeletion = true
-                    this.enemiesDefeated++
-                    projectile.markedForDeletion = true
-                    this.dropWater(enemy.x, enemy.y)
-                    this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50
+                if (projectile.intersects(enemy) && !enemy.markedForDeletion) {
+                    if (enemy.health < 1) {
+                        enemy.markedForDeletion = true
+                        this.enemiesDefeated++
+                        projectile.markedForDeletion = true
+                        this.dropWater(enemy.x, enemy.y, enemy.drops)
+                        this.score += enemy.points || 50 // Använd enemy.points om det finns, annars 50    
+                    } else {
+                        enemy.health -= 1
+                        projectile.markedForDeletion = true
+                    }
+                    
                 }
             })
-        
+
             // Kolla projektil-kollision med plattformar (plattformsspel-specifikt)
             this.platforms.forEach(platform => {
                 this.projectileX = 0
@@ -330,8 +329,11 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                         this.projectileY = projectile.y
                     }
+                    
+                    this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     projectile.markedForDeletion = true
+                    console.log(this.projectileX, this.projectileY)
                 }
             })
 
@@ -379,9 +381,13 @@ export default class PlatformerGame extends GameBase {
         }
     }
 
-    dropWater(x, y) {
-        const Water = new WaterDrop(this, x, y)
-        this.WaterDrops.push(Water)
+    dropWater(x, y, drops) {
+        for (let i = 0; i < drops; i++) {
+            const randomDrop = Math.floor(Math.random() * 15)
+            const Water = new WaterDrop(this, x + i * randomDrop, y + i)
+            this.WaterDrops.push(Water)    
+        }
+        
     }
 
     draw(ctx) {

@@ -19,7 +19,9 @@ export default class Enemy extends GameObject {
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
         
+        this.health = 1 // Fiendens hälsa
         this.damage = 1 // Hur mycket skada fienden gör
+        this.drops = 3 // Antal vatten droppar som släpps vid död
 
         this.canShoot = true
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
@@ -27,6 +29,8 @@ export default class Enemy extends GameObject {
 
         this.loadSprite("run", runSprite, 12, 80)
         this.loadSprite("fall", fallSprite, 1)
+
+        
     }
 
     shoot() {

@@ -24,8 +24,8 @@ export default class Player extends GameObject {
         this.jumps = 0
         
         // Health system
-        this.maxHealth = 15
-        this.health = this.maxHealth
+        this.maxHealth = 20
+        this.health = this.maxHealth / 2
         this.invulnerable = false // Immun mot skada efter att ha blivit träffad
         this.invulnerableTimer = 0
         this.invulnerableDuration = 1000 // 1 sekund i millisekunder
@@ -114,7 +114,7 @@ export default class Player extends GameObject {
         if (this.game.inputHandler.mouseButtons.has(0) && this.canShoot) {
             this.shoot()
             this.health -= 1
-            if (this.health < 2) {
+            if (this.health <= 2) {
                 this.invulnerable = true
                 this.invulnerableTimer = 1000
                 this.shootCooldownTimer = 1000   
