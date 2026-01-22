@@ -19,7 +19,7 @@ export default class Enemy extends GameObject {
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
         
-        this.health = 2 // Fiendens hälsa
+        this.health = 1 // Fiendens hälsa
         this.damage = 1 // Hur mycket skada fienden gör
 
         this.loadSprite("run", runSprite, 12, 80)

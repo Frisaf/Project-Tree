@@ -128,10 +128,12 @@ export default class PlatformerGame extends GameBase {
     }
     
     restart() {
+        this.loadLevel(1)
         this.currentLevelIndex = 0
         this.init()
         this.gameState = 'PLAYING'
         this.currentMenu = null
+        this.player.health = this.player.maxHealth
         this.WaterDrops.forEach(WaterDrop => {
                 WaterDrop.markedForDeletion = true
         })
