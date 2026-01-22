@@ -2,9 +2,9 @@ import Level from './Level.js'
 import Platform from '../Platform.js'
 import Enemy from '../Enemy.js'
 import FlyingEnemy from '../FlyingEnemy.js'
+import TankEnemy from '../TankEnemy.js'
 import Background from '../Background.js'
 import BackgroundObject from '../BackgroundObject.js'
-import blueBg from '../assets/Pixel Adventure 1/Background/Blue.png'
 import bigClouds from '../assets/clouds/Big Clouds.png'
 import cloud1 from '../assets/clouds/Small Cloud 1.png'
 import cloud2 from '../assets/clouds/Small Cloud 2.png'
@@ -115,7 +115,8 @@ export default class Level1 extends Level {
 
         let coordinates
 
-        if (this.game.currentWave < 3) {
+        // Bara basic enemies
+        if (this.game.currentWave <= 3) {
             for (let i = 0; i <= this.enemyAmount; i++) {
                 coordinates = random_choice(spawnPoints)
 
@@ -125,21 +126,35 @@ export default class Level1 extends Level {
                 this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(Math.random() * -200), 40, 40))
             }
         }
-
-        else {
+        // Bara flying och basic
+        else if (this.game.currentWave > 3 && this.game.currentWave <= 5) { 
             for(let i = 0; i <= this.enemyAmount; i++) {
                 coordinates = random_choice(spawnPoints)
-
                 let spawnX = coordinates[0]
                 let spawnY = coordinates[1]
                 let result = Math.random()
 
                 if (result < 0.5) {
                     this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                } else {
+                    this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 }
+            }
+        }
+        // Alla enemies
+        else { 
+            for(let i = 0; i <= this.enemyAmount; i++) {
+                coordinates = random_choice(spawnPoints)
+                let spawnX = coordinates[0]
+                let spawnY = coordinates[1]
+                let result = Math.random()
 
-                else {
-                    this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 50, 50))
+                if (result < 0.33) {
+                    this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                } else if (result < 0.66) {
+                    this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                } else {
+                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 }
             }
         }

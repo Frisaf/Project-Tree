@@ -32,8 +32,14 @@ export default class Camera {
         // Clamp till world bounds
         // this.targetX = Math.max(10, Math.min(this.targetX, this.worldWidth - this.width))
         // this.targetY = Math.max(10, Math.min(this.targetY, this.worldHeight - this.height))
-        if (targetCenterY > 300) {
+        if (targetCenterY > 350) {
             this.targetY = 50
+        }
+
+        if (targetCenterX < 840) {
+            this.targetX = -50
+        } else if (targetCenterX > 2700) {
+            this.targetX = 1850
         }
     }
     
