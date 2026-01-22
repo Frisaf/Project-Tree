@@ -24,7 +24,7 @@ export default class Player extends GameObject {
         this.jumps = 0
         
         // Health system
-        this.maxHealth = 20
+        this.maxHealth = 10
         this.health = this.maxHealth / 2
         this.invulnerable = false // Immun mot skada efter att ha blivit träffad
         this.invulnerableTimer = 0
@@ -181,6 +181,10 @@ export default class Player extends GameObject {
     gainHealth(healthamount) {
         if (this.health === this.maxHealth) healthamount = 0
         this.health += healthamount
+    }
+
+    grow() {
+        this.maxHealth *= 2
     }
     
     handlePlatformCollision(platform) {

@@ -239,9 +239,21 @@ export default class PlatformerGame extends GameBase {
             this.saveGame()
             return
         }
+
+        if (this.player.health === this.player.maxHealth) {
+            this.gameState = "GROW_READY"
+            
+            if (this.inputHandler.keys.has("g") || this.inputHandler.keys.has("G")) {
+                this.inputHandler.keys.delete("g")
+                this.inputHandler.keys.delete("G")
+
+                this.player.grow()
+                this.gameState = "PLAYING"
+            }
+        }
         
         // Uppdatera bara om spelet är i PLAYING state
-        if (this.gameState !== 'PLAYING') return
+        if (this.gameState !== 'PLAYING' && this.gameState !== "GROW_READY") return
         
         // Uppdatera background objects
         this.backgroundObjects.forEach(obj => obj.update(deltaTime))
