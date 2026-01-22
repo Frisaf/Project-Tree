@@ -120,6 +120,12 @@ export default class Player extends GameObject {
                 this.shootCooldownTimer = 1000   
             }        
         }
+
+        if (-1.6 < this.game.gun.angle && this.game.gun.angle < 1.5) {
+            this.lastDirectionX = 1
+        } else {
+            this.lastDirectionX = -1
+        }
         
         // Uppdatera animation state baserat på movement
         if (!this.isGrounded && this.velocityY < 0) {

@@ -35,9 +35,6 @@ export default class Camera {
         if (targetCenterY > 300) {
             this.targetY = 50
         }
-
-
-        console.log('following', targetCenterX, targetCenterY)
     }
     
     update(deltaTime) {

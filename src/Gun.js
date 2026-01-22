@@ -7,14 +7,15 @@ export default class Gun extends GameObject {
 
         this.color = "blue"
         this.angle = 0
-
+        this.options = options
+        
         if (options.sprite) {
             this.sprite = new Sprite(options.sprite)
         }
     }
 
     update() {
-        this.x = this.game.player.x + 25
+        this.x = this.game.player.x + this.game.player.width
         this.y = this.game.player.y + 30
         this.mouseX = this.game.inputHandler.mouseX + (this.game.camera ? this.game.camera.x : 0)
         this.mouseY = this.game.inputHandler.mouseY + (this.game.camera ? this.game.camera.y : 0)
@@ -23,23 +24,26 @@ export default class Gun extends GameObject {
     draw(ctx, camera = null) {
         const screenX = camera ? this.x - camera.x : this.x
         const screenY = camera ? this.y - camera.y : this.y
-        const spriteDrawn = this.drawSprite(ctx, camera, this.direction === -1)
 
         this.angle = Math.atan2(this.mouseY - this.y, this.mouseX - this.x)
+        // -1.6 < angle < 1.5
+
+        if (this.angle < -1.6 || this.angle > 1.6) {
+            
+        }
 
         ctx.save()
-        ctx.translate(screenX, screenY)
+        ctx.translate(screenX - 25, screenY)
+
         ctx.rotate(this.angle)
 
-        if (this.sprite && this.sprite.draw(ctx, screenX, screenY, this.width, this.height)) {
+        if (this.sprite && this.sprite.draw(ctx, -this.width / 2, -this.height / 2, this.width, this.height)) {
+            ctx.restore()
             return
-        }
-
-        else {
+        } else {
             ctx.fillStyle = this.color
             ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height)
+            ctx.restore()
         }
-
-        ctx.restore()
     }
 }
