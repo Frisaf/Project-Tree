@@ -307,7 +307,7 @@ export default class PlatformerGame extends GameBase {
             
             // Kolla kollision med fiender
             this.enemies.forEach(enemy => {
-                if (projectile.intersects(enemy) && !enemy.markedForDeletion) {
+                if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
                     if (enemy.health < 1) {
                         enemy.markedForDeletion = true
                         this.enemiesDefeated++
@@ -326,7 +326,7 @@ export default class PlatformerGame extends GameBase {
             this.platforms.forEach(platform => {
                 this.projectileX = 0
                 this.projectileY = 0
-                if (projectile.intersects(platform)) {
+                if (projectile.intersects(platform) && !projectile.enemyProjectile) {
                     const projectiledata = projectile.getCollisionData(platform)
                     if (projectiledata === 'left') {
                         this.projectileX -= projectile.width
