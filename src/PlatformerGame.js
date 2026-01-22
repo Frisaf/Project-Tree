@@ -6,6 +6,7 @@ import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
+import startGunSprite from "./assets/Project Tree/gun_start.png"
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -98,8 +99,13 @@ export default class PlatformerGame extends GameBase {
             )
         }
         
+        this.startGunConfig = {
+            image: startGunSprite,
+            sourceWidth: 112,
+            sourceHeight: 21,
+        }
 
-        this.gun = new Gun(this, levelData.playerSpawnX, levelData.playerSpawnY, 30, 10)
+        this.gun = new Gun(this, levelData.playerSpawnX + this.player.width, levelData.playerSpawnY, 112, 21, {sprite: this.startGunConfig})
         
         // Återställ projektiler
         this.projectiles = []
@@ -425,11 +431,11 @@ export default class PlatformerGame extends GameBase {
         this.WaterDrops.forEach(drop => {
             drop.draw(ctx, this.camera)
         } )
+
+        this.gun.draw(ctx, this.camera)
         
         // Rita spelaren med camera offset
         this.player.draw(ctx, this.camera)
-
-        this.gun.draw(ctx, this.camera)
         
         // Rita UI sist (utan camera offset - alltid synligt)
         this.ui.draw(ctx)

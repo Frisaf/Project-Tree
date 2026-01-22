@@ -1,5 +1,5 @@
 import GameObject from "./GameObject"
-import flyingSprite from "./assets/Pixel Adventure 1/Main Characters/Virtual Guy/Idle (32x32).png"
+import flyingSprite from "./assets/Project Tree/Enemies/flying.png"
 
 export default class FlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -25,7 +25,7 @@ export default class FlyingEnemy extends GameObject {
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
-        this.loadSprite("fly", flyingSprite, 11, 80)
+        this.loadSprite("fly", flyingSprite, 2, 80)
     }
 
     shoot() {
