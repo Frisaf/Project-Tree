@@ -1,8 +1,8 @@
 import GameObject from './GameObject.js'
 import idleSprite from "./assets/Project Tree/idle.png"
-import runSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Run (32x32).png'
-import jumpSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Jump (32x32).png'
-import fallSprite from './assets/Pixel Adventure 1/Main Characters/Ninja Frog/Fall (32x32).png'
+import runSprite from './assets/Project Tree/running.png'
+import jumpSprite from './assets/Project Tree/jump.png'
+import fallSprite from './assets/Project Tree/fall.png'
 
 export default class Player extends GameObject {
     constructor(game, x, y, width, height, color) {
@@ -38,7 +38,7 @@ export default class Player extends GameObject {
         
         // Sprite animation system - ladda sprites med olika hastigheter
         this.loadSprite('idle', idleSprite, 2, 200)  // Långsammare idle
-        this.loadSprite('run', runSprite, 12, 80)     // Snabbare spring
+        this.loadSprite('run', runSprite, 3, 100)     // Snabbare spring
         this.loadSprite('jump', jumpSprite, 1)
         this.loadSprite('fall', fallSprite, 1)
         
