@@ -81,26 +81,43 @@ export default class Level1 extends Level {
     createPlatforms() {
         const height = this.game.height
         const worldWidth = this.game.worldWidth
-
+        new Platform(this.game, this.game.worldWidth / 2 - 128, height - 70, 288, 32, {sprite: {platform: true}}),
         this.platforms = [
-            // Marken (hela nivån)
+            // Map Edge
             new Platform(this.game, 0, height - 40, worldWidth, 40, {sprite: {ground: true}}),
-            
-            // Plattformar (utspridda över nivån)
-            new Platform(this.game, 150, height - 140, 128, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 400, height - 200, 128, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 100, height - 280, 96, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 550, height - 160, 96, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 350, height - 320, 160, 32, {sprite: {platform: true}}),
-            // Nya plattformar längre bort
-            new Platform(this.game, 900, height - 180, 160, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 1100, height - 240, 128, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 1300, height - 160, 96, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 1500, height - 280, 160, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 1750, height - 200, 128, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 1950, height - 320, 160, 32, {sprite: {platform: true}}),
-            new Platform(this.game, 2150, height - 180, 96, 32, {sprite: {platform: true}}),
+            new Platform(this.game, 0, height - 1576, worldWidth, 40, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 1536, 32, 1536, {sprite: {ground: true}}),
+            new Platform(this.game, worldWidth, height - 1536, 32, 1536, {sprite: {ground: true}}),
+            // Left-side Platforms
+            new Platform(this.game, this.game.worldWidth / 6 - 256, height - 266, 416, 64, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 3 - 192, height - 500, 288, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 3 - 192, height - 1000, 288, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 6 - 256, height - 1266, 416, 64, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 3 - 128, height - 250, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 6 - 128, height - 500, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 6 - 128, height - 1000, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 3 - 128, height - 1250, 160, 32, {sprite: {platform: true}}),
+            // Centre Platforms
+            new Platform(this.game, this.game.worldWidth / 2 - 192, height - this.game.height + 32, 416, 64, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 6 - 192, height - this.game.height + 48, 288, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 5 / 6 - 96, height - this.game.height + 48, 288, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 3 - 128, height - this.game.height + 48, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 2 / 3 - 32, height - this.game.height + 48, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth / 2 - 128, height - 1250, 288, 32, {sprite: {platform: true}}),
+            // Right-side Platforms
+            new Platform(this.game, this.game.worldWidth * 5 / 6 - 160, height - 266, 416, 64, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 2 / 3 - 96, height - 500, 288, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 2 / 3 - 96, height - 1000, 288, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 5 / 6 - 160, height - 1266, 416, 64, {sprite: {platform: true}}), 
+            new Platform(this.game, this.game.worldWidth * 2 / 3 - 32, height - 250, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 5 / 6 - 32, height - 500, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 5/ 6 - 32, height - 1000, 160, 32, {sprite: {platform: true}}),
+            new Platform(this.game, this.game.worldWidth * 2/ 3 - 32, height - 1250, 160, 32, {sprite: {platform: true}}),
+           
         ]
+        for (let plat = 0; plat < 4; plat++) {
+            this.platforms.push(new Platform(this.game, this.game.worldWidth / 2 - 224 + 32*plat, height - 70 - 32*plat, 448 - 64*plat, 32, {sprite: {platform: true}}),)
+        }
     }
 
     createEnemies() {
@@ -159,16 +176,5 @@ export default class Level1 extends Level {
             }
         }
 
-        // this.enemies = [
-        //     new Enemy(this.game, 200, height - 220, 40, 40, 80),
-        //     new Enemy(this.game, 450, height - 240, 40, 40),
-        //     new Enemy(this.game, 360, height - 440, 40, 40, 50),
-        //     // Nya fiender längre bort
-        //     new Enemy(this.game, 1000, height - 220, 40, 40, 100),
-        //     new Enemy(this.game, 1400, height - 200, 40, 40),
-        //     new Enemy(this.game, 1800, height - 240, 40, 40, 150),
-
-        //     new FlyingEnemy(this.game, 100, height - 400, 40, 40, 100)
-        // ]
     }
 }

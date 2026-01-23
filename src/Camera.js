@@ -29,18 +29,19 @@ export default class Camera {
         this.targetX = targetCenterX - this.width / 2
         this.targetY = targetCenterY - this.height / 2
         
-        // Clamp till world bounds
-        // this.targetX = Math.max(10, Math.min(this.targetX, this.worldWidth - this.width))
-        // this.targetY = Math.max(10, Math.min(this.targetY, this.worldHeight - this.height))
         if (targetCenterY > 350) {
-            this.targetY = 50
+            this.targetY = this.worldHeight / 20 - 15
         }
-
-        if (targetCenterX < 840) {
-            this.targetX = -50
-        } else if (targetCenterX > 2700) {
-            this.targetX = 1850
+        if (targetCenterY < -400) {
+            this.targetY = -this.worldHeight
         }
+        if (targetCenterX < 800) {
+            this.targetX = this.worldWidth / 100 - 40
+        }
+        if (targetCenterX > 2400) {
+            this.targetX = this.worldWidth / 1.95
+        }
+        console.log(this.targetX, this.targetY)
     }
     
     update(deltaTime) {
