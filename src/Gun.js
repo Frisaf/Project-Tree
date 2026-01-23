@@ -12,10 +12,20 @@ export default class Gun extends GameObject {
         if (options.sprite) {
             this.sprite = new Sprite(options.sprite)
         }
+
+        this.modifierX = 0
     }
 
     update() {
-        this.x = this.game.player.x + this.game.player.width
+        if (this.game.player.stage + 1 === 3) {
+            this.modifierX = 10
+        } else if (this.game.player.stage + 1 === 4) {
+            this.modifierX = 20
+        }
+
+        console.log(this.modifierX)
+
+        this.x = this.game.player.x + this.game.player.width - this.modifierX
         this.y = this.game.player.y + 30
         this.mouseX = this.game.inputHandler.mouseX + (this.game.camera ? this.game.camera.x : 0)
         this.mouseY = this.game.inputHandler.mouseY + (this.game.camera ? this.game.camera.y : 0)

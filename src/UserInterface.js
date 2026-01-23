@@ -16,6 +16,8 @@ export default class UserInterface {
             this.drawGameOver(ctx)
         } else if (this.game.gameState === 'WIN') {
             this.drawWin(ctx)
+        } else if (this.game.gameState === "GROW_READY") {
+            this.drawGrow(ctx)
         }
     }
     
@@ -38,6 +40,20 @@ export default class UserInterface {
         
         // Rita health bar (egen metod)
         this.drawHealthBar(ctx, 10, 10)
+    }
+
+    drawGrow(ctx) {
+        ctx.save()
+
+        ctx.font = `${this.fontSize}px ${this.fontFamily}`
+        ctx.fillStyle = this.textColor
+        ctx.shadowColor = this.shadowColor
+        ctx.shadowOffsetX = 2
+        ctx.shadowOffsetY = 2
+        ctx.shadowBlur = 3
+
+        ctx.fillText("Press [G] to grow!", 10, 140)
+        ctx.restore()
     }
     
     drawHealthBar(ctx, x, y) {

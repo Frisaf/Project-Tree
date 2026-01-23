@@ -1,8 +1,28 @@
 import GameObject from './GameObject.js'
+
+// Stage 1 sprites
 import idleSprite from "./assets/Project Tree/idle.png"
 import runSprite from './assets/Project Tree/running.png'
 import jumpSprite from './assets/Project Tree/jump.png'
 import fallSprite from './assets/Project Tree/fall.png'
+
+// Stage 2 sprites
+import idleSprite2 from "./assets/Project Tree/idle2.png"
+import runSprite2 from "./assets/Project Tree/run2.png"
+import jumpSprite2 from "./assets/Project Tree/jump2.png"
+import fallSprite2 from "./assets/Project Tree/fall2.png"
+
+// Stage 3 sprites
+import idleSprite3 from "./assets/Project Tree/idle3.png"
+import runSprite3 from "./assets/Project Tree/run3.png"
+import jumpSprite3 from "./assets/Project Tree/jump3.png"
+import fallSprite3 from "./assets/Project Tree/fall3.png"
+
+// Stage 4 sprites
+import idleSprite4 from "./assets/Project Tree/idle4.png"
+import runSprite4 from "./assets/Project Tree/run4.png"
+import jumpSprite4 from "./assets/Project Tree/jump4.png"
+import fallSprite4 from "./assets/Project Tree/fall4.png"
 
 export default class Player extends GameObject {
     constructor(game, x, y, width, height, color) {
@@ -24,7 +44,7 @@ export default class Player extends GameObject {
         this.jumps = 0
         
         // Health system
-        this.maxHealth = 20
+        this.maxHealth = 10
         this.health = this.maxHealth / 2
         this.invulnerable = false // Immun mot skada efter att ha blivit träffad
         this.invulnerableTimer = 0
@@ -35,6 +55,14 @@ export default class Player extends GameObject {
         this.shootCooldown = 300 // millisekunder mellan skott
         this.shootCooldownTimer = 0
         this.lastDirectionX = 1 // Kom ihåg senaste riktningen för skjutning
+
+        this.stage = 0
+        this.playerSprites = [
+            [idleSprite, runSprite, jumpSprite, fallSprite, 2], // stage 1
+            [idleSprite2, runSprite2, jumpSprite2, fallSprite2, 2], // stage 2
+            [idleSprite3, runSprite3, jumpSprite3, fallSprite3, 3], // stage 3
+            [idleSprite4, runSprite4, jumpSprite4, fallSprite4, 2] // stage 4
+        ]
         
         // Sprite animation system - ladda sprites med olika hastigheter
         this.loadSprite('idle', idleSprite, 2, 200)  // Långsammare idle
@@ -181,6 +209,20 @@ export default class Player extends GameObject {
     gainHealth(healthamount) {
         if (this.health === this.maxHealth) healthamount = 0
         this.health += healthamount
+    }
+
+    grow() {
+        this.maxHealth *= 2
+        this.stage++
+        this.width *= 1.25
+        this.height *= 1.25
+        
+        const runFrames = this.playerSprites[this.stage][4]
+        
+        this.loadSprite("idle", this.playerSprites[this.stage][0], 2, 200)
+        this.loadSprite("run", this.playerSprites[this.stage][1], runFrames, 100)
+        this.loadSprite("jump", this.playerSprites[this.stage][2], 1)
+        this.loadSprite("fall", this.playerSprites[this.stage][3], 1)
     }
     
     handlePlatformCollision(platform) {
