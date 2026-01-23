@@ -1,6 +1,6 @@
 import GameObject from './GameObject.js'
-import runSprite from "./assets/Pixel Adventure 1/Main Characters/Mask Dude/Run (32x32).png"
-import fallSprite from "./assets/Pixel Adventure 1/Main Characters/Mask Dude/Fall (32x32).png"
+import runSprite from "./assets/Project Tree/Enemies/walking.png"
+import fallSprite from "./assets/Project Tree/Enemies/falling_walking.png"
 
 export default class Enemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -27,7 +27,7 @@ export default class Enemy extends GameObject {
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
-        this.loadSprite("run", runSprite, 12, 80)
+        this.loadSprite("run", runSprite, 6, 100)
         this.loadSprite("fall", fallSprite, 1)
 
         
