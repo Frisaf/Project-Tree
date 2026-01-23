@@ -6,7 +6,12 @@ import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
+
+// gun sprites
 import startGunSprite from "./assets/Project Tree/gun_start.png"
+import gunSprite2 from "./assets/Project Tree/gun2.png"
+import gunSprite3 from "./assets/Project Tree/gun3.png"
+import gunSprite4 from "./assets/Project Tree/gun4.png"
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -51,6 +56,24 @@ export default class PlatformerGame extends GameBase {
         
         // Skapa och visa huvudmenyn
         this.currentMenu = new MainMenu(this)
+
+        this.gunConfigs = [ // stage 2 and up
+            {
+                image: gunSprite2,
+                sourceWidth: 112,
+                sourceHeight: 21
+            },
+            {
+                image: gunSprite3,
+                sourceWidth: 134,
+                sourceHeight: 24
+            },
+            {
+                image: gunSprite4,
+                sourceWidth: 138,
+                sourceHeight: 35
+            }
+        ]
     }
     
     init() {
@@ -100,7 +123,7 @@ export default class PlatformerGame extends GameBase {
         }
         
         this.startGunConfig = {
-            image: startGunSprite,
+            image: startGunSprite, 
             sourceWidth: 112,
             sourceHeight: 21,
         }
@@ -229,6 +252,20 @@ export default class PlatformerGame extends GameBase {
             this.gameState = 'PLAYING'
             return
         }
+
+        if (this.inputHandler.keys.has("b")) {
+            this.inputHandler.keys.delete("b")
+            this.player.grow()
+
+            const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
+            const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+
+            this.gun.markedForDeletion = true
+            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+
+            this.gameState = "PLAYING"
+            return
+        }
         
         // Spara spelet med S-tangenten (endast när spelet körs)
         if ((this.inputHandler.keys.has('s') || this.inputHandler.keys.has('S')) && this.gameState === 'PLAYING') {
@@ -240,7 +277,7 @@ export default class PlatformerGame extends GameBase {
             return
         }
 
-        if (this.player.health === this.player.maxHealth) {
+        if (this.player.health === this.player.maxHealth && this.player.stage < 4) {
             this.gameState = "GROW_READY"
             
             if (this.inputHandler.keys.has("g") || this.inputHandler.keys.has("G")) {
@@ -248,6 +285,13 @@ export default class PlatformerGame extends GameBase {
                 this.inputHandler.keys.delete("G")
 
                 this.player.grow()
+
+                const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
+                const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+
+                this.gun.markedForDeletion = true
+                this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+
                 this.gameState = "PLAYING"
             }
         }
