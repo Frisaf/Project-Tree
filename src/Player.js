@@ -223,6 +223,9 @@ export default class Player extends GameObject {
         this.loadSprite("run", this.playerSprites[this.stage][1], runFrames, 100)
         this.loadSprite("jump", this.playerSprites[this.stage][2], 1)
         this.loadSprite("fall", this.playerSprites[this.stage][3], 1)
+
+        this.invulnerable = true
+        this.invulnerableTimer = this.invulnerableDuration
     }
     
     handlePlatformCollision(platform) {
