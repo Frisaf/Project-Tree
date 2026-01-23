@@ -23,8 +23,6 @@ export default class Gun extends GameObject {
             this.modifierX = 20
         }
 
-        console.log(this.modifierX)
-
         this.x = this.game.player.x + this.game.player.width - this.modifierX
         this.y = this.game.player.y + 30
         this.mouseX = this.game.inputHandler.mouseX + (this.game.camera ? this.game.camera.x : 0)

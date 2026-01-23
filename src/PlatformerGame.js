@@ -382,20 +382,29 @@ export default class PlatformerGame extends GameBase {
             this.platforms.forEach(platform => {
                 this.projectileX = 0
                 this.projectileY = 0
-                if (projectile.intersects(platform) && !projectile.enemyProjectile) {
+                if (projectile.intersects(platform)) {
                     const projectiledata = projectile.getCollisionData(platform)
-                    if (projectiledata === 'left') {
-                        this.projectileX -= projectile.width
-                        this.projectileY += projectile.height 
-                    } else {
+                    this.projectileY = projectile.y
+
+                    if (projectiledata.direction === 'left') {
+                        this.projectileX = projectile.x - 30
+                    }
+
+                    else if (projectiledata.direction === "right") {
+                        this.projectileX = projectile.x + 30
+                    }
+
+                    else if (projectiledata.direction === "top") {
                         this.projectileX = projectile.x
-                        this.projectileY = projectile.y
+                        this.projectileY -= 30
                     }
                     
-                    this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    else {
+                        this.projectileX = projectile.x
+                    }
+                    
                     if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     projectile.markedForDeletion = true
-                    console.log(this.projectileX, this.projectileY)
                 }
             })
 
