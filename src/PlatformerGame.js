@@ -7,6 +7,12 @@ import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
 
+// gun sprites
+import startGunSprite from "./assets/Project Tree/gun_start.png"
+import gunSprite2 from "./assets/Project Tree/gun2.png"
+import gunSprite3 from "./assets/Project Tree/gun3.png"
+import gunSprite4 from "./assets/Project Tree/gun4.png"
+
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
  * Innehåller plattformsspel-specifik logik som gravity, platforms, coins
@@ -50,6 +56,24 @@ export default class PlatformerGame extends GameBase {
         
         // Skapa och visa huvudmenyn
         this.currentMenu = new MainMenu(this)
+
+        this.gunConfigs = [ // stage 2 and up
+            {
+                image: gunSprite2,
+                sourceWidth: 112,
+                sourceHeight: 21
+            },
+            {
+                image: gunSprite3,
+                sourceWidth: 134,
+                sourceHeight: 24
+            },
+            {
+                image: gunSprite4,
+                sourceWidth: 138,
+                sourceHeight: 35
+            }
+        ]
     }
     
     init() {
@@ -98,8 +122,13 @@ export default class PlatformerGame extends GameBase {
             )
         }
         
+        this.startGunConfig = {
+            image: startGunSprite, 
+            sourceWidth: 112,
+            sourceHeight: 21,
+        }
 
-        this.gun = new Gun(this, levelData.playerSpawnX, levelData.playerSpawnY, 30, 10)
+        this.gun = new Gun(this, levelData.playerSpawnX + this.player.width, levelData.playerSpawnY, 112, 21, {sprite: this.startGunConfig})
         
         // Återställ projektiler
         this.projectiles = []
@@ -221,6 +250,20 @@ export default class PlatformerGame extends GameBase {
             this.gameState = 'PLAYING'
             return
         }
+
+        if (this.inputHandler.keys.has("b")) {
+            this.inputHandler.keys.delete("b")
+            this.player.grow()
+
+            const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
+            const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+
+            this.gun.markedForDeletion = true
+            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+
+            this.gameState = "PLAYING"
+            return
+        }
         
         // Spara spelet med S-tangenten (endast när spelet körs)
         if ((this.inputHandler.keys.has('s') || this.inputHandler.keys.has('S')) && this.gameState === 'PLAYING') {
@@ -231,9 +274,28 @@ export default class PlatformerGame extends GameBase {
             this.saveGame()
             return
         }
+
+        if (this.player.health === this.player.maxHealth && this.player.stage < 4) {
+            this.gameState = "GROW_READY"
+            
+            if (this.inputHandler.keys.has("g") || this.inputHandler.keys.has("G")) {
+                this.inputHandler.keys.delete("g")
+                this.inputHandler.keys.delete("G")
+
+                this.player.grow()
+
+                const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
+                const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+
+                this.gun.markedForDeletion = true
+                this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+
+                this.gameState = "PLAYING"
+            }
+        }
         
         // Uppdatera bara om spelet är i PLAYING state
-        if (this.gameState !== 'PLAYING') return
+        if (this.gameState !== 'PLAYING' && this.gameState !== "GROW_READY") return
         
         // Uppdatera background objects
         this.backgroundObjects.forEach(obj => obj.update(deltaTime))
@@ -321,16 +383,26 @@ export default class PlatformerGame extends GameBase {
                 this.projectileY = 0
                 if (projectile.intersects(platform) && !projectile.enemyProjectile) {
                     const projectiledata = projectile.getCollisionData(platform)
-                    if (projectiledata === 'left') {
-                        this.projectileX -= projectile.width, this.projectileY += projectile.height 
-                    } else {
-                        this.projectileX = projectile.x, this.projectileY = projectile.y
+                    this.projectileY = projectile.y
+
+                    if (projectiledata.direction === 'left') {
+                        this.projectileX = projectile.x - 30
                     }
-                    this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+
+                    else if (projectiledata.direction === "right") {
+                        this.projectileX = projectile.x + 30
+                    }
+
+                    else if (projectiledata.direction === "top") {
+                        this.projectileX = projectile.x
+                        this.projectileY -= 30
+                    }
+                    
+                    else {
+                        this.projectileX = projectile.x
+                    }
+                    
                     if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
-                    projectile.markedForDeletion = true
-                    console.log(this.projectileX, this.projectileY)
-                } else if (projectile.intersects(platform) && projectile.enemyProjectile) {
                     projectile.markedForDeletion = true
                 }
             })
@@ -417,11 +489,11 @@ export default class PlatformerGame extends GameBase {
         this.WaterDrops.forEach(drop => {
             drop.draw(ctx, this.camera)
         } )
+
+        this.gun.draw(ctx, this.camera)
         
         // Rita spelaren med camera offset
         this.player.draw(ctx, this.camera)
-
-        this.gun.draw(ctx, this.camera)
         
         // Rita UI sist (utan camera offset - alltid synligt)
         this.ui.draw(ctx)
