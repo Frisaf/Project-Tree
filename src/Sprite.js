@@ -1,5 +1,6 @@
 import terrain from "./assets/Pixel Adventure 1/Terrain/Terrain (16x16).png"
 import ground1 from "./assets/Project Tree/Environment/ground1.png"
+import platform1 from "./assets/Project Tree/Environment/platform1.png"
 
 /**
  * Sprite - För att rita ut statiska bilder och tilade terrängbitar
@@ -31,12 +32,10 @@ export default class Sprite {
             tile: "both",
         }
         const platformConfig = {
-            image: terrain,
+            image: platform1,
             sourceWidth: 32,
             sourceHeight: 32,
             tile: "both",
-            sourceX: 208,
-            sourceY: 16
         }
 
         this.image = new Image()
@@ -46,8 +45,8 @@ export default class Sprite {
             this.sourceWidth = platformConfig.sourceWidth
             this.sourceHeight = platformConfig.sourceHeight
             this.tile = platformConfig.tile
-            this.sourceX = platformConfig.sourceX
-            this.sourceY = platformConfig.sourceY
+            this.sourceX = 0
+            this.sourceY = 0
         } else if (config.ground) {
             this.image.src = groundConfig1.image
             this.sourceWidth = groundConfig1.sourceWidth
