@@ -86,6 +86,8 @@ export default class Level1 extends Level {
         this.platforms = [
             // Map Edge
             new Platform(this.game, 0, height - 40, worldWidth, 40, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 0, worldWidth, 40, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - -40, worldWidth, 40, {sprite: {ground: true}}),
             new Platform(this.game, 0, height - 1576, worldWidth, 40, {sprite: {ground: true}}),
             new Platform(this.game, 0, height - 1536, 32, 1536, {sprite: {ground: true}}),
             new Platform(this.game, worldWidth, height - 1536, 32, 1536, {sprite: {ground: true}}),
