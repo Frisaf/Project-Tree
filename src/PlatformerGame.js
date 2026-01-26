@@ -381,7 +381,7 @@ export default class PlatformerGame extends GameBase {
             this.platforms.forEach(platform => {
                 this.projectileX = 0
                 this.projectileY = 0
-                if (projectile.intersects(platform) && !projectile.enemyProjectile) {
+                if (projectile.intersects(platform)) {
                     const projectiledata = projectile.getCollisionData(platform)
                     this.projectileY = projectile.y
 
