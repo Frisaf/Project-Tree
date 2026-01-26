@@ -34,6 +34,8 @@ export default class Enemy extends GameObject {
 
         this.loadSprite("run", runSprite, 6, 100)
         this.loadSprite("fall", fallSprite, 1)
+
+        this.currentAnimation = "run"
     }
 
     shoot() {
