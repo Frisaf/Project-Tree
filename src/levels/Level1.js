@@ -171,7 +171,7 @@ export default class Level1 extends Level {
                 } else if (result < 0.66) {
                     this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 } else {
-                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 1000), height - spawnY + Math.floor(50 + Math.random() * -200), 80, 80))
                 }
             }
         }
