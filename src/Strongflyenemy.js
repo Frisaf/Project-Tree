@@ -1,7 +1,7 @@
 import GameObject from "./GameObject"
-import flyingSprite from "./assets/Project Tree/Enemies/heli_fly.png"
+import strongflyingSprite from "./assets/Project Tree/Enemies/flying.png"
 
-export default class FlyingEnemy extends GameObject {
+export default class StrongFlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
         super(game, x, y, width, height)
         this.color = "orange"
@@ -13,8 +13,8 @@ export default class FlyingEnemy extends GameObject {
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
         
-        this.health = 1 // Fiendens hälsa
-        this.damage = 2 // Hur mycket skada fienden gör
+        this.health = 2 // Fiendens hälsa
+        this.damage = 3 // Hur mycket skada fienden gör
         this.drops = 4 // Antal vatten droppar som släpps vid död
 
         this.bobOffset = 0
@@ -25,7 +25,7 @@ export default class FlyingEnemy extends GameObject {
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
-        this.loadSprite("fly", flyingSprite, 4, 80)
+        this.loadSprite("fly", strongflyingSprite, 2, 80)
     }
 
     shoot() {
@@ -34,8 +34,8 @@ export default class FlyingEnemy extends GameObject {
 
         this.game.addProjectile(centerX, centerY, -1, null, true)
         this.game.addProjectile(centerX, centerY, 1, null, true)
-        //this.game.addProjectile(centerX, centerY, null, -1, true)
-        //this.game.addProjectile(centerX, centerY, null, 1, true)
+        this.game.addProjectile(centerX, centerY, null, -1, true)
+        this.game.addProjectile(centerX, centerY, null, 1, true)
         
         // Sätt cooldown
         this.canShoot = false
