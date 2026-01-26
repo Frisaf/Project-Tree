@@ -86,7 +86,6 @@ export default class Player extends GameObject {
         } else {
             this.velocityX = 0
             this.directionX = 0
-            console.log('hey')
         }
 
         // Hopp - endast om spelaren är på marken

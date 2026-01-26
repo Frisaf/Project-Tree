@@ -13,6 +13,8 @@ import gunSprite2 from "./assets/Project Tree/gun2.png"
 import gunSprite3 from "./assets/Project Tree/gun3.png"
 import gunSprite4 from "./assets/Project Tree/gun4.png"
 
+import dirt2 from "./assets/Project Tree/Environment/dirt2.png"
+
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
  * Innehåller plattformsspel-specifik logik som gravity, platforms, coins

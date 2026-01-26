@@ -6,10 +6,8 @@ import TankEnemy from '../TankEnemy.js'
 import StrongFlyingEnemy from '../Strongflyenemy.js'
 import Background from '../Background.js'
 import BackgroundObject from '../BackgroundObject.js'
-import bigClouds from '../assets/clouds/Big Clouds.png'
-import cloud1 from '../assets/clouds/Small Cloud 1.png'
-import cloud2 from '../assets/clouds/Small Cloud 2.png'
-import cloud3 from '../assets/clouds/Small Cloud 3.png'
+
+import dirt1 from "../assets/Project Tree/Environment/dirt1.png"
 
 import background1 from "../assets/Project Tree/Environment/sky1.png"
 import clouds1 from "../assets/Project Tree/Environment/clouds1.png"
@@ -63,6 +61,14 @@ export default class Level1 extends Level {
     createPlatforms() {
         const height = this.game.height
         const worldWidth = this.game.worldWidth
+
+        this.dirtConfig = {
+            image: dirt1,
+            sourceWidth: 32,
+            sourceHeight: 32,
+            tile: "both"
+        }
+
         new Platform(this.game, this.game.worldWidth / 2 - 128, height - 70, 288, 32, {sprite: {platform: true}}),
         this.platforms = [
             // Map Edge
@@ -70,6 +76,7 @@ export default class Level1 extends Level {
             new Platform(this.game, 0, height - 1576, worldWidth, 32, {sprite: {ground: true}}),
             new Platform(this.game, 0, height - 1536, 32, 1536, {sprite: {ground: true}}),
             new Platform(this.game, worldWidth, height - 1536, 32, 1536, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 8, worldWidth, 32, {sprite: this.dirtConfig}),
             // Left-side Platforms
             new Platform(this.game, this.game.worldWidth / 6 - 256, height - 266, 416, 64, {sprite: {platform: true}}),
             new Platform(this.game, this.game.worldWidth / 3 - 192, height - 500, 288, 32, {sprite: {platform: true}}),
@@ -107,7 +114,6 @@ export default class Level1 extends Level {
         const spawnPoints = [[-30, 300], [-30, 1350], [2200, 300], [2200, 1350]]
         function random_choice(array) {
             const result = array[Math.floor(Math.random() * array.length)]
-            console.log(result)
             return result
         };
 
@@ -148,7 +154,7 @@ export default class Level1 extends Level {
                 } else if (result < 0.66) {
                     this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 } else {
-                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 80, 80))
                 }
             }
         } else {
@@ -162,7 +168,7 @@ export default class Level1 extends Level {
                 } else if (result < 0.5) {
                     this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 } else if (result < 0.75) {
-                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
+                    this.enemies.push(new TankEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 80, 80))
                 } else {
                     this.enemies.push(new StrongFlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 }
