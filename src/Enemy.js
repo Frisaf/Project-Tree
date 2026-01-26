@@ -27,10 +27,15 @@ export default class Enemy extends GameObject {
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
+        this.canJump = true
+        this.jumpCooldown = Math.floor(5000 + Math.random() * 10000)
+        this.jumpCooldownTimer = Math.floor(5000 + Math.random() * 10000)
+        this.jumpPower = -0.6
+
         this.loadSprite("run", runSprite, 6, 100)
         this.loadSprite("fall", fallSprite, 1)
 
-        
+        this.currentAnimation = "run"
     }
 
     shoot() {
@@ -89,11 +94,23 @@ export default class Enemy extends GameObject {
             this.shoot()
         )
 
+        if (!this.canJump) {
+            this.jumpCooldownTimer -= deltaTime
+
+            if (this.shootCooldownTimer <= 0) {
+                this.canJump = true
+            }
+        }
+
+        else {
+            this.jump()
+        }
+
         if (this.velocityX !== 0) {
             this.setAnimation("run")
         }
 
-        else if (!this.isGrounded && this.velocityY > 0) {
+        else if (!this.isGrounded) {
             this.setAnimation("fall")
         }
 
@@ -126,8 +143,14 @@ export default class Enemy extends GameObject {
     }
     
     handleEnemyCollision(otherEnemy) {
-        if (this.intersects(otherEnemy)) {
+        const collisionData = this.getCollisionData(otherEnemy)
+
+        if (this.intersects(otherEnemy) && (collisionData.direction === "left" || collisionData.direction === "right")) {
             this.direction *= -1
+        }
+
+        else if (this.intersects(otherEnemy) && (collisionData.direction === "top")) {
+            this.canJump = true
         }
     }
     
@@ -142,6 +165,14 @@ export default class Enemy extends GameObject {
                 this.direction = -1
             }
         }
+    }
+
+    jump() {
+        this.velocityY = this.jumpPower
+        this.velocityX = this.speed
+        this.canJump = false
+        this.isGrounded = false
+        this.shootCooldownTimer = this.jumpCooldown
     }
 
     draw(ctx, camera = null) {

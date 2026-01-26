@@ -1,5 +1,5 @@
 import GameObject from "./GameObject"
-import tankSprite from "./assets/Pixel Adventure 1/Main Characters/Pink Man/Idle (32x32).png"
+import tankSprite from "./assets/Project Tree/Enemies/tank.png"
 
 export default class Enemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -22,7 +22,13 @@ export default class Enemy extends GameObject {
         this.damage = 3 // Hur mycket skada fienden gör
         this.drops = 15 // Antal vatten droppar som släpps vid död
 
-        this.loadSprite("tankidle", tankSprite, 12, 80)
+        this.canShoot = true
+        this.shootCooldown = Math.floor(5000 + Math.random() * 8000) // millisekunder mellan skott
+        this.shootCooldownTimer = 0
+
+        this.loadSprite("tank", tankSprite, 2, 80)
+        
+        this.currentAnimation = "tank"
     }
 
     update(deltaTime) {
@@ -57,8 +63,18 @@ export default class Enemy extends GameObject {
         // Uppdatera position
         this.x += this.velocityX * deltaTime
         this.y += this.velocityY * deltaTime
-
+        
+        this.setAnimation("tank")
         this.updateAnimation(deltaTime)
+
+        if (!this.canShoot) {
+            this.shootCooldownTimer -= deltaTime
+            if (this.shootCooldownTimer <= 0) {
+                this.canShoot = true
+            }
+        } else {
+            this.shoot()
+        }
     }
         
     handlePlatformCollision(platform) {
@@ -103,6 +119,17 @@ export default class Enemy extends GameObject {
                 this.direction = -1
             }
         }
+    }
+
+    shoot() {
+        const centerX = this.x + this.width / 2
+        const centerY = this.y + this.height / 2
+
+        this.game.addProjectile(centerX, centerY, null, -1, true)
+        
+        // Sätt cooldown
+        this.canShoot = false
+        this.shootCooldownTimer = this.shootCooldown
     }
 
     draw(ctx, camera = null) {
