@@ -42,7 +42,7 @@ export default class PlatformerGame extends GameBase {
         // Plattformsspel-specifika arrays
         this.platforms = []
         this.projectiles = []
-        this.WaterDrops = []
+        this.waterDrops = []
         
         // Background arrays (sätts av levels)
         this.backgrounds = []
@@ -159,7 +159,7 @@ export default class PlatformerGame extends GameBase {
     restart() {
         this.currentWave = 1, this.enemiesDefeated = 0
         this.currentMenu = null
-        this.WaterDrops = []
+        this.waterDrops = []
         this.init()
         this.gameState = 'PLAYING',
         this.player.health = this.player.maxHealth / 2
@@ -348,10 +348,12 @@ export default class PlatformerGame extends GameBase {
         })
 
         // Kontrollera kollision med waterdrop
-        this.WaterDrops.forEach(WaterDrop => {
-            if (this.player.intersects(WaterDrop) && !WaterDrop.markedForDeletion) {
+        this.waterDrops.forEach(waterDrop => {
+            waterDrop.update(deltaTime)
+
+            if (this.player.intersects(waterDrop) && !waterDrop.markedForDeletion) {
                 this.player.gainHealth(1)
-                WaterDrop.markedForDeletion = true
+                waterDrop.markedForDeletion = true
             }
         })
         
@@ -402,7 +404,7 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                     }
                     
-                    if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    if (!projectile.enemyProjectile) this.waterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
                     projectile.markedForDeletion = true
                 }
             })
@@ -416,7 +418,7 @@ export default class PlatformerGame extends GameBase {
         // Ta bort objekt markerade för borttagning
         this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion)
         this.projectiles = this.projectiles.filter(projectile => !projectile.markedForDeletion)
-        this.WaterDrops = this.WaterDrops.filter(WaterDrops => !WaterDrops.markedForDeletion)
+        this.waterDrops = this.waterDrops.filter(WaterDrops => !WaterDrops.markedForDeletion)
 
         // Förhindra att spelaren går utöver world bounds
         if (this.player.x < 0) {
@@ -439,7 +441,7 @@ export default class PlatformerGame extends GameBase {
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
             this.gameState = 'GAME_OVER'
-            this.WaterDrops.forEach(WaterDrop => {
+            this.waterDrops.forEach(WaterDrop => {
                 WaterDrop.markedForDeletion = true
             })
         }
@@ -449,7 +451,7 @@ export default class PlatformerGame extends GameBase {
         for (let i = 0; i < drops; i++) {
             const randomDrop = Math.floor(Math.random() * 15)
             const Water = new WaterDrop(this, x + i * randomDrop, y + i)
-            this.WaterDrops.push(Water)    
+            this.waterDrops.push(Water)    
         }
         
     }
@@ -486,7 +488,7 @@ export default class PlatformerGame extends GameBase {
             }
         })
 
-        this.WaterDrops.forEach(drop => {
+        this.waterDrops.forEach(drop => {
             drop.draw(ctx, this.camera)
         } )
 

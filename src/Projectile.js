@@ -4,13 +4,13 @@ import enemyBullet from "./assets/Project Tree/Enemies/bolt.png"
 
 export default class Projectile extends GameObject {
     constructor(game, x, y, directionX, directionY = 0, enemyProjectile = false) {
-        super(game, x, y, 12, 6)
+        super(game, x, y, 12, 12)
         this.directionX = directionX // -1 för vänster, 1 för höger
         this.directionY = directionY
         this.speed = 0.5 // pixels per millisekund
         this.startX = x // Spara startposition
         this.startY = y
-        this.maxDistance = 1283.33 // Max en skärm långt
+        this.maxDistance = 1600 // Max en skärm långt
 
         if (!enemyProjectile) {
             this.color = 'orange'
