@@ -1,5 +1,5 @@
 import GameObject from "./GameObject"
-import tankSprite from "./assets/Pixel Adventure 1/Main Characters/Pink Man/Idle (32x32).png"
+import tankSprite from "./assets/Project Tree/Enemies/tank.png"
 
 export default class Enemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -22,7 +22,9 @@ export default class Enemy extends GameObject {
         this.damage = 3 // Hur mycket skada fienden gör
         this.drops = 15 // Antal vatten droppar som släpps vid död
 
-        this.loadSprite("tankidle", tankSprite, 12, 80)
+        this.loadSprite("tank", tankSprite, 2, 80)
+        
+        this.currentAnimation = "tank"
     }
 
     update(deltaTime) {
@@ -57,7 +59,8 @@ export default class Enemy extends GameObject {
         // Uppdatera position
         this.x += this.velocityX * deltaTime
         this.y += this.velocityY * deltaTime
-
+        
+        this.setAnimation("tank")
         this.updateAnimation(deltaTime)
     }
         
