@@ -122,7 +122,7 @@ export default class Level1 extends Level {
 
     createEnemies() {
         const height = this.game.height
-        const spawnPoints = [[0, 300], [0, 1400], [1700, 300], [1700, 1400]]
+        const spawnPoints = [[0, 300], [0, 1350], [1700, 300], [1700, 1350]]
         function random_choice(array) {
             const result = array[Math.floor(Math.random() * array.length)]
             console.log(result)
