@@ -1,4 +1,6 @@
 import terrain from "./assets/Pixel Adventure 1/Terrain/Terrain (16x16).png"
+import ground1 from "./assets/Project Tree/Environment/ground1.png"
+import platform1 from "./assets/Project Tree/Environment/platform1.png"
 
 /**
  * Sprite - För att rita ut statiska bilder och tilade terrängbitar
@@ -23,20 +25,17 @@ export default class Sprite {
      * @param {boolean} [config.ground]
      */
     constructor(config) {
-        const groundConfig = {
-            image: terrain,
-            sourceWidth: 48,
-            sourceHeight: 48,
-            tile: "both",
-            sourceX: 96,
-        }
-        const platformConfig = {
-            image: terrain,
+        const groundConfig1 = {
+            image: ground1,
             sourceWidth: 32,
             sourceHeight: 32,
             tile: "both",
-            sourceX: 208,
-            sourceY: 16
+        }
+        const platformConfig = {
+            image: platform1,
+            sourceWidth: 32,
+            sourceHeight: 32,
+            tile: "both",
         }
 
         this.image = new Image()
@@ -46,14 +45,14 @@ export default class Sprite {
             this.sourceWidth = platformConfig.sourceWidth
             this.sourceHeight = platformConfig.sourceHeight
             this.tile = platformConfig.tile
-            this.sourceX = platformConfig.sourceX
-            this.sourceY = platformConfig.sourceY
+            this.sourceX = 0
+            this.sourceY = 0
         } else if (config.ground) {
-            this.image.src = groundConfig.image
-            this.sourceWidth = groundConfig.sourceWidth
-            this.sourceHeight = groundConfig.sourceHeight
-            this.tile = groundConfig.tile
-            this.sourceX = groundConfig.sourceX
+            this.image.src = groundConfig1.image
+            this.sourceWidth = groundConfig1.sourceWidth
+            this.sourceHeight = groundConfig1.sourceHeight
+            this.tile = groundConfig1.tile
+            this.sourceX = 0
             this.sourceY = 0
         } else {
             this.image.src = config.image

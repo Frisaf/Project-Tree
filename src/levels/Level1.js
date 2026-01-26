@@ -11,6 +11,10 @@ import cloud1 from '../assets/clouds/Small Cloud 1.png'
 import cloud2 from '../assets/clouds/Small Cloud 2.png'
 import cloud3 from '../assets/clouds/Small Cloud 3.png'
 
+import background1 from "../assets/Project Tree/Environment/sky1.png"
+import clouds1 from "../assets/Project Tree/Environment/clouds1.png"
+import trees1 from "../assets/Project Tree/Environment/trees1.png"
+
 /**
  * Level 1 - Den första nivån i spelet
  * Enklare layout för att introducera spelmekaniker
@@ -31,22 +35,19 @@ export default class Level1 extends Level {
 
     createBackgrounds() {
         this.backgrounds = [
-            // Far background - blå himmel
-            new Background(this.game, null, {
+            // Far background
+            new Background(this.game, background1, {
+                scrollSpeed: 0, // Långsam parallax (långt bort)
                 tiled: true,
-                tileWidth: 64,
-                tileHeight: 64,
-                scrollSpeed: 0.3 // Långsam parallax (långt bort)
             }),
-            // Mid background - stora moln
-            new Background(this.game, bigClouds, {
-                tiled: true,
-                tileWidth: 448,
-                tileHeight: 101,
-                tileY: false, // Tila bara horisontellt
-                scrollSpeed: 0.6, // Mellan-parallax
-                yPosition: this.game.height - 141, // Precis ovanför marken
-                height: 101
+            new Background(this.game, clouds1, {
+                scrollSpeed: 0,
+                tiled: false,
+                yPosition: 0
+            }),
+            new Background(this.game, trees1, {
+                scroolSpeed: 0.7,
+                tiled: false
             })
         ]
     }
@@ -55,27 +56,7 @@ export default class Level1 extends Level {
         const height = this.game.height
 
         this.backgroundObjects = [
-            // Små moln som rör sig oberoende
-            new BackgroundObject(this.game, 200, height - 300, cloud1, {
-                speed: 0.02,
-                scrollSpeed: 0.4
-            }),
-            new BackgroundObject(this.game, 600, height - 250, cloud2, {
-                speed: 0.015,
-                scrollSpeed: 0.4
-            }),
-            new BackgroundObject(this.game, 1200, height - 280, cloud3, {
-                speed: 0.018,
-                scrollSpeed: 0.4
-            }),
-            new BackgroundObject(this.game, 1800, height - 320, cloud1, {
-                speed: 0.022,
-                scrollSpeed: 0.4
-            }),
-            new BackgroundObject(this.game, 2200, height - 260, cloud2, {
-                speed: 0.016,
-                scrollSpeed: 0.4
-            })
+            
         ]
     }
 
@@ -85,8 +66,8 @@ export default class Level1 extends Level {
         new Platform(this.game, this.game.worldWidth / 2 - 128, height - 70, 288, 32, {sprite: {platform: true}}),
         this.platforms = [
             // Map Edge
-            new Platform(this.game, 0, height - 40, worldWidth, 40, {sprite: {ground: true}}),
-            new Platform(this.game, 0, height - 1576, worldWidth, 40, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 40, worldWidth, 32, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 1576, worldWidth, 32, {sprite: {ground: true}}),
             new Platform(this.game, 0, height - 1536, 32, 1536, {sprite: {ground: true}}),
             new Platform(this.game, worldWidth, height - 1536, 32, 1536, {sprite: {ground: true}}),
             // Left-side Platforms
