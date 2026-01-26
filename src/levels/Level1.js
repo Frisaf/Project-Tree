@@ -19,8 +19,8 @@ export default class Level1 extends Level {
         super(game)
         
         // Player spawn position för denna level
-        this.playerSpawnX = 50
-        this.playerSpawnY = 50
+        this.playerSpawnX = 1600
+        this.playerSpawnY = -400
 
         this.enemies = []
         
@@ -122,11 +122,10 @@ export default class Level1 extends Level {
 
     createEnemies() {
         const height = this.game.height
-        const spawnPoints = [[250, 220], [1000, 440], [360, 200], [500, 900]]
-
+        const spawnPoints = [[0, 300], [0, 1400], [1700, 300], [1700, 1400]]
         function random_choice(array) {
             const result = array[Math.floor(Math.random() * array.length)]
-
+            console.log(result)
             return result
         };
 

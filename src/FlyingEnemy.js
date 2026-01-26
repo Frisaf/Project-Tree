@@ -13,7 +13,7 @@ export default class FlyingEnemy extends GameObject {
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
         
-        this.health = 2 // Fiendens hälsa
+        this.health = 1 // Fiendens hälsa
         this.damage = 2 // Hur mycket skada fienden gör
         this.drops = 4 // Antal vatten droppar som släpps vid död
 
