@@ -21,7 +21,7 @@ export default class Enemy extends GameObject {
         
         this.health = 1 // Fiendens hälsa
         this.damage = 1 // Hur mycket skada fienden gör
-        this.drops = 3 // Antal vatten droppar som släpps vid död
+        this.drops = 4 // Antal vatten droppar som släpps vid död
 
         this.canShoot = true
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott

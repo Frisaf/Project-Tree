@@ -52,7 +52,7 @@ export default class Player extends GameObject {
         // this.invulnerableDuration = 10000000000000000 // TEST
         // Shooting system
         this.canShoot = true
-        this.shootCooldown = 300 // millisekunder mellan skott
+        this.shootCooldown = 500 // millisekunder mellan skott
         this.shootCooldownTimer = 0
         this.lastDirectionX = 1 // Kom ihåg senaste riktningen för skjutning
 
@@ -75,17 +75,18 @@ export default class Player extends GameObject {
 
     update(deltaTime) {
         // Horisontell rörelse
-        if (this.game.inputHandler.keys.has('a') || this.game.inputHandler.keys.has("A")) {
+        if ((this.game.inputHandler.keys.has('a')) || (this.game.inputHandler.keys.has('A'))) {
             this.velocityX = -this.moveSpeed
             this.directionX = -1
             this.lastDirectionX = -1 // Spara riktning
-        } else if (this.game.inputHandler.keys.has('d') || this.game.inputHandler.keys.has("D")) {
+        } else if ((this.game.inputHandler.keys.has('d')) || this.game.inputHandler.keys.has('D')) {
             this.velocityX = this.moveSpeed
             this.directionX = 1
             this.lastDirectionX = 1 // Spara riktning
         } else {
             this.velocityX = 0
             this.directionX = 0
+            console.log('hey')
         }
 
         // Hopp - endast om spelaren är på marken
@@ -121,6 +122,8 @@ export default class Player extends GameObject {
         // Uppdatera position baserat på hastighet
         this.x += this.velocityX * deltaTime
         this.y += this.velocityY * deltaTime
+        
+
         
         // Uppdatera invulnerability timer
         if (this.invulnerable) {
