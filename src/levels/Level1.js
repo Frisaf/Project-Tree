@@ -9,6 +9,7 @@ import bigClouds from '../assets/clouds/Big Clouds.png'
 import cloud1 from '../assets/clouds/Small Cloud 1.png'
 import cloud2 from '../assets/clouds/Small Cloud 2.png'
 import cloud3 from '../assets/clouds/Small Cloud 3.png'
+import backgroundImage from "../assets//Project Tree/Environment/background1.png"
 
 /**
  * Level 1 - Den första nivån i spelet
@@ -31,22 +32,12 @@ export default class Level1 extends Level {
     createBackgrounds() {
         this.backgrounds = [
             // Far background - blå himmel
-            new Background(this.game, null, {
-                tiled: true,
+            new Background(this.game, backgroundImage, {
+                tiled: false,
                 tileWidth: 64,
                 tileHeight: 64,
                 scrollSpeed: 0.3 // Långsam parallax (långt bort)
             }),
-            // Mid background - stora moln
-            new Background(this.game, bigClouds, {
-                tiled: true,
-                tileWidth: 448,
-                tileHeight: 101,
-                tileY: false, // Tila bara horisontellt
-                scrollSpeed: 0.6, // Mellan-parallax
-                yPosition: this.game.height - 141, // Precis ovanför marken
-                height: 101
-            })
         ]
     }
 
@@ -84,8 +75,8 @@ export default class Level1 extends Level {
         new Platform(this.game, this.game.worldWidth / 2 - 128, height - 70, 288, 32, {sprite: {platform: true}}),
         this.platforms = [
             // Map Edge
-            new Platform(this.game, 0, height - 40, worldWidth, 40, {sprite: {ground: true}}),
-            new Platform(this.game, 0, height - 1576, worldWidth, 40, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 40, worldWidth, 32, {sprite: {ground: true}}),
+            new Platform(this.game, 0, height - 1576, worldWidth, 32, {sprite: {ground: true}}),
             new Platform(this.game, 0, height - 1536, 32, 1536, {sprite: {ground: true}}),
             new Platform(this.game, worldWidth, height - 1536, 32, 1536, {sprite: {ground: true}}),
             // Left-side Platforms
