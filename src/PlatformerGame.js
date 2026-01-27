@@ -39,7 +39,7 @@ export default class PlatformerGame extends GameBase {
         this.currentWave = 1
         this.enemiesDefeated = 0
         this.wavecooldown = 0
-        this.wavetimer = 3000
+        this.wavetimer = 5000 // 5 sekunder mellan waves
         this.wavespace = false
         
         // Plattformsspel-specifika arrays
@@ -144,19 +144,12 @@ export default class PlatformerGame extends GameBase {
     }
     
     nextWave() {
-        this.wavespace = true
-        this.wavecooldown = this.wavetimer
-        console.log("Wave cooldown started")
-
         this.currentWave += 1
         this.enemiesDefeated = 0
-
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
-
         console.log(this.currentWave) 
-        
     }
     
     addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
@@ -444,20 +437,20 @@ export default class PlatformerGame extends GameBase {
         
         const levelData = this.currentLevel.getData()
 
+        // Next wave condition när alla fiender är besegrade, med countdown innan waven startar
         if (this.enemiesDefeated === levelData.enemyAmount + 1) {
             if (this.wavespace === false) {
-                this.nextWave()
-            } 
-        }
-    
-        // Updatera wave cooldown
-        if (this.wavespace === true) {
-            this.wavecooldown -= deltaTime
-            if (this.wavecooldown <= 0) {
-                this.wavespace = false
-                this.wavecooldown = 0
+                this.wavecooldown = this.wavetimer
+                this.wavespace = true
+            } else {
+                this.wavecooldown -= deltaTime
+                if (this.wavecooldown <= 0) {
+                    this.nextWave()
+                    this.wavespace = false
+                }
             }
         }
+    
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
             this.gameState = 'GAME_OVER'
