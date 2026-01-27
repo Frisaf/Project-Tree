@@ -38,6 +38,9 @@ export default class PlatformerGame extends GameBase {
 
         this.currentWave = 1
         this.enemiesDefeated = 0
+        this.wavecooldown = 0
+        this.wavetimer = 3000
+        this.wavespace = false
         
         // Plattformsspel-specifika arrays
         this.platforms = []
@@ -141,14 +144,19 @@ export default class PlatformerGame extends GameBase {
     }
     
     nextWave() {
+        this.wavespace = true
+        this.wavecooldown = this.wavetimer
+        console.log("Wave cooldown started")
+
         this.currentWave += 1
         this.enemiesDefeated = 0
-        
+
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
 
-        console.log(this.currentWave)
+        console.log(this.currentWave) 
+        
     }
     
     addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
@@ -222,6 +230,8 @@ export default class PlatformerGame extends GameBase {
             this.inputHandler.keys.clear() // Rensa keys så de inte läcker till spelet
             return
         }
+
+        
         
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
@@ -435,9 +445,19 @@ export default class PlatformerGame extends GameBase {
         const levelData = this.currentLevel.getData()
 
         if (this.enemiesDefeated === levelData.enemyAmount + 1) {
-            this.nextWave()
+            if (this.wavespace === false) {
+                this.nextWave()
+            } 
         }
-        
+    
+        // Updatera wave cooldown
+        if (this.wavespace === true) {
+            this.wavecooldown -= deltaTime
+            if (this.wavecooldown <= 0) {
+                this.wavespace = false
+                this.wavecooldown = 0
+            }
+        }
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
             this.gameState = 'GAME_OVER'

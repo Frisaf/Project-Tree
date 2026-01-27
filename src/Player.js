@@ -86,7 +86,6 @@ export default class Player extends GameObject {
         } else {
             this.velocityX = 0
             this.directionX = 0
-            console.log('hey')
         }
 
         // Hopp - endast om spelaren är på marken
@@ -219,6 +218,7 @@ export default class Player extends GameObject {
         this.stage++
         this.width *= 1.25
         this.height *= 1.25
+        this.shootCooldown *= 0.5 // Minska cooldown med 10%
         
         const runFrames = this.playerSprites[this.stage][4]
         
