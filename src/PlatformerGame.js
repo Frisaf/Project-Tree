@@ -13,6 +13,8 @@ import gunSprite2 from "./assets/Project Tree/gun2.png"
 import gunSprite3 from "./assets/Project Tree/gun3.png"
 import gunSprite4 from "./assets/Project Tree/gun4.png"
 
+import mainTheme from "./assets/Project Tree/Audio/Väkst!.mp3"
+
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
  * Innehåller plattformsspel-specifik logik som gravity, platforms, coins
@@ -73,6 +75,10 @@ export default class PlatformerGame extends GameBase {
                 sourceHeight: 35
             }
         ]
+
+        this.music = new Audio(mainTheme)
+        this.music.volume = 0.3
+        this.music.loop = true
         
         // Initiera spelet
         this.init()
@@ -147,6 +153,7 @@ export default class PlatformerGame extends GameBase {
                 levelData.playerSpawnY, 
                 50, 50, 'green'
             )
+            this.music.play().catch(e => console.log('Playing the music failed:', e))
         }
 
         const playerStage = this.player.stage
