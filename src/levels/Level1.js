@@ -465,7 +465,7 @@ export default class Level1 extends Level {
                 let spawnX = coordinates[0]
                 let spawnY = coordinates[1]
                 result = Math.random()
-                if (result < 0.25) {
+                if (result < 0.20) {
                     this.enemies.push(new Enemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))
                 } else if (result < 0.5) {
                     this.enemies.push(new FlyingEnemy(this.game, spawnX + Math.floor(300 + Math.random() * 400), height - spawnY + Math.floor(50 + Math.random() * -200), 40, 40))

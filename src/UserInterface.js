@@ -33,9 +33,16 @@ export default class UserInterface {
         ctx.shadowBlur = 3
         
         // Rita score
-        ctx.fillText(`Score: ${this.game.score}`, 10, 60)
-        ctx.fillText(`WAVE: ${this.game.currentWave}`, 10, 100)
-        
+        ctx.fillText(`${this.game.score}`, 10, 100)
+        ctx.fillText(`WAVE: ${this.game.currentWave}`, 10, 60)
+        if (this.game.wavespace) {
+            const secondsLeft = Math.ceil(this.game.wavecooldown / 1000)
+            if (secondsLeft > 3) {
+                ctx.fillText(`Wave complete!`, 700, 200)
+            } else {
+                ctx.fillText(`Next wave in: ${secondsLeft}`, 700, 200)
+            }
+        }
         ctx.restore()
         
         // Rita health bar (egen metod)
@@ -57,7 +64,7 @@ export default class UserInterface {
     }
     
     drawHealthBar(ctx, x, y) {
-        const barWidth = 200
+        const barWidth = 300
         const barHeight = 20
         const healthPercent = this.game.player.health / this.game.player.maxHealth
         
