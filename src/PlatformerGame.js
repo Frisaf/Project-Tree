@@ -14,6 +14,7 @@ import gunSprite3 from "./assets/Project Tree/gun3.png"
 import gunSprite4 from "./assets/Project Tree/gun4.png"
 
 import mainTheme from "./assets/Project Tree/Audio/Väkst!.mp3"
+import waterDropSfx from "./assets/Project Tree/Audio/waterdrop.wav"
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -475,7 +476,13 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                     }
                     
-                    if (!projectile.enemyProjectile) this.waterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    if (!projectile.enemyProjectile) {
+                        this.waterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+
+                        const waterSfx = new Audio(waterDropSfx)
+                        waterSfx.volume = 0.3
+                        waterSfx.play().catch(e => console.log('Playing the sfx failed:', e))
+                    }
                     projectile.markedForDeletion = true
                 }
             })
