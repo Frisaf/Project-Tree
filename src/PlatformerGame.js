@@ -223,12 +223,12 @@ export default class PlatformerGame extends GameBase {
         }
         
         return this.saveManager.save({
-            wave: this.wave,
+            wave: this.currentWave,
             score: this.score,
             health: this.player.health,
             playerX: this.player.x,
             playerY: this.player.y,
-            playerStage: this.playerStage
+            playerStage: this.player.stage
         })
     }
     /**
