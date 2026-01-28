@@ -99,7 +99,7 @@ export default class SaveGameManager {
         
         return {
             timestamp: new Date(save.timestamp).toLocaleString('sv-SE'),
-            level: save.wave, // +1 för att levels är 0-indexerade
+            wave: save.wave, // +1 för att levels är 0-indexerade
             score: save.score,
             health: save.health,
             playerStage: save.playerStage,

@@ -12,8 +12,9 @@ export default class MainMenu extends Menu {
         // Visa "Continue" om det finns sparad data
         if (this.game.saveManager.hasSave()) {
             const saveInfo = this.game.saveManager.getSaveInfo()
+            console.log(saveInfo)
             options.push({
-                text: `Continue (Level ${saveInfo.level})`,
+                text: `Continue (wave ${saveInfo.wave}, stage ${saveInfo.playerStage})`,
                 key: 'c',
                 action: () => {
                     this.game.loadGame()
