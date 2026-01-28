@@ -53,14 +53,13 @@ export default class PlatformerGame extends GameBase {
         
         // Save game system
         this.saveManager = new SaveGameManager('platformer-save')
-        
-        // Initiera spelet
-        this.init()
-        
-        // Skapa och visa huvudmenyn
-        this.currentMenu = new MainMenu(this)
 
-        this.gunConfigs = [ // stage 2 and up
+        this.gunConfigs = [
+            {
+                image: startGunSprite,
+                sourceWidth: 112,
+                sourceHeight: 21
+            },
             {
                 image: gunSprite2,
                 sourceWidth: 112,
@@ -77,6 +76,31 @@ export default class PlatformerGame extends GameBase {
                 sourceHeight: 35
             }
         ]
+        
+        // Initiera spelet
+        this.init()
+        
+        // Skapa och visa huvudmenyn
+        this.currentMenu = new MainMenu(this)
+    }
+
+    nextStage() {
+        const playerStage = this.player.stage
+
+        if (playerStage === 1) {
+            this.backgrounds = this.currentLevel.createBackgrounds2()
+            this.platforms = this.currentLevel.createPlatforms2()
+        }
+
+        else if (playerStage === 2) {
+            this.backgrounds = this.currentLevel.createBackgrounds3()
+            this.platforms = this.currentLevel.createPlatforms3()
+        }
+
+        else if (playerStage === 3) {
+            this.backgrounds = this.currentLevel.createBackgrounds4()
+            this.platforms = this.currentLevel.createPlatforms4()
+        }
     }
     
     init() {
@@ -91,6 +115,11 @@ export default class PlatformerGame extends GameBase {
 
         // Ladda current level
         this.loadLevel(this.currentLevelIndex)
+
+        const levelData = this.currentLevel.getData()
+
+        this.backgrounds = levelData.backgrounds
+        this.platforms = levelData.platforms
     }
     
     loadLevel(levelIndex) {
@@ -108,11 +137,9 @@ export default class PlatformerGame extends GameBase {
         const levelData = this.currentLevel.getData()
         
         // Sätt level data
-        this.platforms = levelData.platforms
         this.enemies = levelData.enemies
         
         // Sätt background data
-        this.backgrounds = levelData.backgrounds
         this.backgroundObjects = levelData.backgroundObjects
         
         // Skapa player på level spawn position
@@ -124,14 +151,12 @@ export default class PlatformerGame extends GameBase {
                 50, 50, 'green'
             )
         }
-        
-        this.startGunConfig = {
-            image: startGunSprite, 
-            sourceWidth: 112,
-            sourceHeight: 21,
-        }
 
-        this.gun = new Gun(this, levelData.playerSpawnX + this.player.width, levelData.playerSpawnY, 112, 21, {sprite: this.startGunConfig})
+        const playerStage = this.player.stage
+        const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+        const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
+
+        this.gun = new Gun(this, levelData.playerSpawnX + this.player.width, levelData.playerSpawnY, gunWidth, gunHeight, {sprite: this.gunConfigs[playerStage]})
         
         // Återställ projektiler
         this.projectiles = []
@@ -244,11 +269,11 @@ export default class PlatformerGame extends GameBase {
             this.inputHandler.keys.delete("b")
             this.player.grow()
 
-            const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
-            const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+            const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+            const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
 
             this.gun.markedForDeletion = true
-            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage]})
 
             this.gameState = "PLAYING"
             return
@@ -264,6 +289,11 @@ export default class PlatformerGame extends GameBase {
             return
         }
 
+        if (this.inputHandler.keys.has("j")) {
+            this.inputHandler.keys.delete("j")
+            this.nextStage()
+        }
+
         if (this.player.health === this.player.maxHealth && this.player.stage < 4) {
             this.gameState = "GROW_READY"
             
@@ -272,12 +302,13 @@ export default class PlatformerGame extends GameBase {
                 this.inputHandler.keys.delete("G")
 
                 this.player.grow()
+                this.nextStage()
 
-                const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
-                const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+                const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+                const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
 
                 this.gun.markedForDeletion = true
-                this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+                this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage]})
 
                 this.gameState = "PLAYING"
             }
