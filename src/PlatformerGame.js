@@ -40,6 +40,9 @@ export default class PlatformerGame extends GameBase {
 
         this.currentWave = 1
         this.enemiesDefeated = 0
+        this.wavecooldown = 0
+        this.wavetimer = 5000 // 5 sekunder mellan waves
+        this.wavespace = false
         
         // Plattformsspel-specifika arrays
         this.platforms = []
@@ -207,21 +210,6 @@ export default class PlatformerGame extends GameBase {
     /**
      * Sparar nuvarande spelläge
      */
-    saveGame() {
-        // Kolla att spelaren finns (kan inte spara om spelet inte har startat)
-        if (!this.player) {
-            console.warn('Cannot save: game not started')
-            return false
-        }
-        
-        return this.saveManager.save({
-            currentLevelIndex: this.currentLevelIndex,
-            score: this.score,
-            health: this.player.health,
-            playerX: this.player.x,
-            playerY: this.player.y
-        })
-    }
     
     /**
      * Laddar sparat spelläge
@@ -255,12 +243,15 @@ export default class PlatformerGame extends GameBase {
     }
 
     update(deltaTime) {
+
         // Uppdatera menyn om den är aktiv
         if (this.gameState === 'MENU' && this.currentMenu) {
             this.currentMenu.update(deltaTime)
             this.inputHandler.keys.clear() // Rensa keys så de inte läcker till spelet
             return
         }
+
+        
         
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
@@ -482,10 +473,20 @@ export default class PlatformerGame extends GameBase {
         
         const levelData = this.currentLevel.getData()
 
+        // Next wave condition när alla fiender är besegrade, med countdown innan waven startar
         if (this.enemiesDefeated === levelData.enemyAmount + 1) {
-            this.nextWave()
+            if (this.wavespace === false) {
+                this.wavecooldown = this.wavetimer
+                this.wavespace = true
+            } else {
+                this.wavecooldown -= deltaTime
+                if (this.wavecooldown <= 0) {
+                    this.nextWave()
+                    this.wavespace = false
+                }
+            }
         }
-        
+    
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
             this.gameState = 'GAME_OVER'

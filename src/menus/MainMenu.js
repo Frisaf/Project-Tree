@@ -41,19 +41,6 @@ export default class MainMenu extends Menu {
             }
         })
         
-        // Clear Save (om det finns sparad data)
-        if (this.game.saveManager.hasSave()) {
-            options.push({
-                text: 'Delete Save',
-                key: 'd',
-                action: () => {
-                    this.game.saveManager.clear()
-                    // Uppdatera menyn för att visa nya alternativ
-                    this.game.currentMenu = new MainMenu(this.game)
-                }
-            })
-        }
-        
         return options
     }
 }
