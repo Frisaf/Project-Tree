@@ -169,21 +169,6 @@ export default class PlatformerGame extends GameBase {
     /**
      * Sparar nuvarande spelläge
      */
-    saveGame() {
-        // Kolla att spelaren finns (kan inte spara om spelet inte har startat)
-        if (!this.player) {
-            console.warn('Cannot save: game not started')
-            return false
-        }
-        
-        return this.saveManager.save({
-            currentLevelIndex: this.currentLevelIndex,
-            score: this.score,
-            health: this.player.health,
-            playerX: this.player.x,
-            playerY: this.player.y
-        })
-    }
     
     /**
      * Laddar sparat spelläge
@@ -217,6 +202,7 @@ export default class PlatformerGame extends GameBase {
     }
 
     update(deltaTime) {
+
         // Uppdatera menyn om den är aktiv
         if (this.gameState === 'MENU' && this.currentMenu) {
             this.currentMenu.update(deltaTime)
