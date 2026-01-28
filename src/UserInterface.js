@@ -2,7 +2,7 @@ export default class UserInterface {
     constructor(game) {
         this.game = game
         this.fontSize = 24
-        this.fontFamily = 'Arial'
+        this.fontFamily = '"Pixelify Sans", sans-serif'
         this.textColor = '#FFFFFF'
         this.shadowColor = '#000000'
     }
@@ -104,18 +104,18 @@ export default class UserInterface {
         // Game Over text
         ctx.save()
         ctx.fillStyle = '#FF0000'
-        ctx.font = 'bold 60px Arial'
+        ctx.font = 'bold 60px "Pixelify Sans", sans-serif'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText('GAME OVER', this.game.width / 2, this.game.height / 2 - 50)
         
         // Score
         ctx.fillStyle = '#FFFFFF'
-        ctx.font = '30px Arial'
+        ctx.font = '30px "Pixelify Sans", sans-serif'
         ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 20)
         
         // Restart instruktion
-        ctx.font = '24px Arial'
+        ctx.font = '24px "Pixelify Sans", sans-serif'
         ctx.fillText('Press R to Restart', this.game.width / 2, this.game.height / 2 + 120)
         ctx.restore()
     }
@@ -140,7 +140,7 @@ export default class UserInterface {
         ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 60)
         
         // Restart instruktion
-        ctx.font = '24px Arial'
+        ctx.font = '24px "Pixelify Sans", sans-serif'
         ctx.fillText('Press R to Play Again', this.game.width / 2, this.game.height / 2 + 120)
         ctx.restore()
     }

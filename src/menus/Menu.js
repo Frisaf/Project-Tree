@@ -87,7 +87,7 @@ export default class Menu {
         
         // Rita title
         ctx.fillStyle = this.titleColor
-        ctx.font = 'bold 48px Arial'
+        ctx.font = 'bold 48px "Pixelify Sans", sans-serif'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(this.title, this.game.width / 2, 80)
@@ -101,7 +101,7 @@ export default class Menu {
             const isSelected = index === this.selectedIndex
             
             // Rita option text
-            ctx.font = '32px Arial'
+            ctx.font = '32px "Pixelify Sans", sans-serif'
             ctx.fillStyle = isSelected ? this.selectedColor : this.optionColor
             
             // Lägg till ">" för vald option
@@ -114,7 +114,7 @@ export default class Menu {
                 
                 // Rita key hint i grön
                 ctx.fillStyle = this.keyColor
-                ctx.font = 'bold 24px Arial'
+                ctx.font = 'bold 24px "Pixelify Sans", sans-serif'
                 ctx.fillText(`[${option.key}]`, this.game.width / 2 + 150, y)
             } else {
                 ctx.fillText(displayText, this.game.width / 2, y)
@@ -123,7 +123,7 @@ export default class Menu {
         
         // Rita instruktioner längst ner
         ctx.fillStyle = '#888888'
-        ctx.font = '18px Arial'
+        ctx.font = '18px "Pixelify Sans", sans-serif'
         ctx.fillText('Use Arrow Keys to navigate, Enter to select', this.game.width / 2, this.game.height - 50)
         
         ctx.restore()
