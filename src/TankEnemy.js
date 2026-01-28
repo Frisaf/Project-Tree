@@ -1,5 +1,7 @@
 import GameObject from "./GameObject"
 import tankSprite from "./assets/Project Tree/Enemies/tank.png"
+import tankAudio from "./assets/Project Tree/Audio/tank.mp3"
+import shootAudio from "./assets/Project Tree/Audio/enemy_shoot.mp3"
 
 export default class Enemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -29,6 +31,14 @@ export default class Enemy extends GameObject {
         this.loadSprite("tank", tankSprite, 2, 80)
         
         this.currentAnimation = "tank"
+
+        this.audio = new Audio(tankAudio)
+        this.audio.volume = 0.05
+        this.audio.loop = true
+        this.audio.play().catch(e => console.log('Playing the audio failed:', e))
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.2
     }
 
     update(deltaTime) {
@@ -75,6 +85,11 @@ export default class Enemy extends GameObject {
         } else {
             this.shoot()
         }
+    }
+
+    stopAudio() {
+        this.audio.pause()
+        this.audio.currentTime = 0
     }
         
     handlePlatformCollision(platform) {
@@ -126,6 +141,7 @@ export default class Enemy extends GameObject {
         const centerY = this.y + this.height / 2
 
         this.game.addProjectile(centerX, centerY, null, -1, true)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false

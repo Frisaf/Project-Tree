@@ -1,4 +1,5 @@
 import GameObject from './GameObject.js'
+import shootAudio from "./assets/Project Tree/Audio/player_shoot.mp3"
 
 // Stage 1 sprites
 import idleSprite from "./assets/Project Tree/idle.png"
@@ -71,6 +72,9 @@ export default class Player extends GameObject {
         this.loadSprite('fall', fallSprite, 1)
         
         this.currentAnimation = 'idle'
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.3
     }
 
     update(deltaTime) {
@@ -191,6 +195,7 @@ export default class Player extends GameObject {
         const directionY = dy / distance
         
         this.game.addProjectile(centerX, centerY, directionX, directionY)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false

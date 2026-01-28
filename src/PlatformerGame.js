@@ -13,6 +13,8 @@ import gunSprite2 from "./assets/Project Tree/gun2.png"
 import gunSprite3 from "./assets/Project Tree/gun3.png"
 import gunSprite4 from "./assets/Project Tree/gun4.png"
 
+import mainTheme from "./assets/Project Tree/Audio/Väkst!.mp3"
+
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
  * Innehåller plattformsspel-specifik logik som gravity, platforms, coins
@@ -76,6 +78,10 @@ export default class PlatformerGame extends GameBase {
                 sourceHeight: 35
             }
         ]
+
+        this.music = new Audio(mainTheme)
+        this.music.volume = 0.3
+        this.music.loop = true
         
         // Initiera spelet
         this.init()
@@ -150,6 +156,7 @@ export default class PlatformerGame extends GameBase {
                 levelData.playerSpawnY, 
                 50, 50, 'green'
             )
+            this.music.play().catch(e => console.log('Playing the music failed:', e))
         }
 
         const playerStage = this.player.stage
@@ -171,10 +178,14 @@ export default class PlatformerGame extends GameBase {
     nextWave() {
         this.currentWave += 1
         this.enemiesDefeated = 0
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
+        
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
-        console.log(this.currentWave) 
     }
     
     addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
@@ -186,6 +197,11 @@ export default class PlatformerGame extends GameBase {
         this.currentWave = 1, this.enemiesDefeated = 0
         this.currentMenu = null
         this.waterDrops = []
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
+        
         this.init()
         this.gameState = 'PLAYING',
         this.player.health = this.player.maxHealth / 2
@@ -386,6 +402,9 @@ export default class PlatformerGame extends GameBase {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
                     if (enemy.health <= 0) {
                         enemy.markedForDeletion = true
+
+                        enemy.stopAudio()
+
                         this.enemiesDefeated += 1
                         projectile.markedForDeletion = true
                         this.dropWater(enemy.x, enemy.y, enemy.drops)
