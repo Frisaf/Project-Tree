@@ -60,17 +60,19 @@ export default class Player extends GameObject {
 
         this.stage = 0
         this.playerSprites = [
-            [idleSprite, runSprite, jumpSprite, fallSprite, 2], // stage 1
+            [idleSprite, runSprite, jumpSprite, fallSprite, 3], // stage 1
             [idleSprite2, runSprite2, jumpSprite2, fallSprite2, 2], // stage 2
             [idleSprite3, runSprite3, jumpSprite3, fallSprite3, 3], // stage 3
             [idleSprite4, runSprite4, jumpSprite4, fallSprite4, 2] // stage 4
         ]
+
+        const runFrames = this.playerSprites[this.stage][4]
         
         // Sprite animation system - ladda sprites med olika hastigheter
-        this.loadSprite('idle', idleSprite, 2, 200)  // Långsammare idle
-        this.loadSprite('run', runSprite, 3, 100)     // Snabbare spring
-        this.loadSprite('jump', jumpSprite, 1)
-        this.loadSprite('fall', fallSprite, 1)
+        this.loadSprite("idle", this.playerSprites[this.stage][0], 2, 200) // Långsammare idle
+        this.loadSprite("run", this.playerSprites[this.stage][1], runFrames, 100) // Snabbare spring
+        this.loadSprite("jump", this.playerSprites[this.stage][2], 1)
+        this.loadSprite("fall", this.playerSprites[this.stage][3], 1)
         
         this.currentAnimation = 'idle'
 
@@ -227,11 +229,13 @@ export default class Player extends GameObject {
     }
 
     grow() {
+        console.log(this.stage)
         this.maxHealth *= 2
         this.stage++
         this.width *= 1.25
         this.height *= 1.25
         this.shootCooldown *= 0.7 // Minska cooldown med 30%
+        console.log(this.stage)
         
         const runFrames = this.playerSprites[this.stage][4]
         

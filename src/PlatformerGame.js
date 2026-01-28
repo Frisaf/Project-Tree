@@ -87,6 +87,8 @@ export default class PlatformerGame extends GameBase {
         this.music = new Audio(mainTheme)
         this.music.volume = 0.3
         this.music.loop = true
+
+        this.loadedFromSave = false
         
         // Initiera spelet
         this.init()
@@ -149,6 +151,7 @@ export default class PlatformerGame extends GameBase {
         
         // Sätt level data
         this.enemies = levelData.enemies
+        this.enemiesDefeated = 0
         
         // Sätt background data
         this.backgroundObjects = levelData.backgroundObjects
@@ -161,8 +164,9 @@ export default class PlatformerGame extends GameBase {
                 levelData.playerSpawnY, 
                 50, 50, 'green'
             )
-            this.music.play().catch(e => console.log('Playing the music failed:', e))
         }
+        
+        this.music.play().catch(e => console.log('Playing the music failed:', e))
 
         const playerStage = this.player.stage
         const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
@@ -226,9 +230,13 @@ export default class PlatformerGame extends GameBase {
             wave: this.currentWave,
             score: this.score,
             health: this.player.health,
+            maxHealth: this.player.maxHealth,
             playerX: this.player.x,
             playerY: this.player.y,
-            playerStage: this.player.stage
+            playerStage: this.player.stage,
+            playerWidth: this.player.width,
+            playerHeight: this.player.height,
+            shootCooldown: this.player.shootCooldown
         })
     }
     /**
@@ -241,24 +249,26 @@ export default class PlatformerGame extends GameBase {
             console.warn('No save data found')
             return false
         }
+
+        this.loadedFromSave = true
         
         // Ladda level först
-        this.wave = saveData.wave
-        this.playerStage = saveData.playerStage
+        this.currentWave = saveData.wave
         this.enemiesDefeated = 0
         this.loadLevel(this.currentLevelIndex)
+        console.log(this.player)
 
-        if (this.playerStage === 1) {
+        if (saveData.playerStage === 1) {
             this.backgrounds = this.currentLevel.createBackgrounds2()
             this.platforms = this.currentLevel.createPlatforms2()
         }
 
-        else if (this.playerStage === 2) {
+        else if (saveData.playerStage === 2) {
             this.backgrounds = this.currentLevel.createBackgrounds3()
             this.platforms = this.currentLevel.createPlatforms3()
         }
 
-        else if (this.playerStage === 3) {
+        else if (saveData.playerStage === 3) {
             this.backgrounds = this.currentLevel.createBackgrounds4()
             this.platforms = this.currentLevel.createPlatforms4()
         }
@@ -267,6 +277,16 @@ export default class PlatformerGame extends GameBase {
         this.player.x = saveData.playerX
         this.player.y = saveData.playerY
         this.player.health = saveData.health
+        this.player.maxHealth = saveData.maxHealth
+        this.player.width = saveData.playerWidth
+        this.player.height = saveData.playerHeight
+        this.player.shootCooldown = saveData.shootCooldown
+        this.player.stage = saveData.playerStage
+        
+        this.player.loadSprite("idle", this.player.playerSprites[saveData.playerStage][0], 2, 200)
+        this.player.loadSprite("run", this.player.playerSprites[saveData.playerStage][1], this.player.playerSprites[saveData.playerStage][4], 100)
+        this.player.loadSprite("jump", this.player.playerSprites[saveData.playerStage][2], 1)
+        this.player.loadSprite("fall", this.player.playerSprites[saveData.playerStage][3], 1)
         
         // Återställ progress
         this.score = saveData.score

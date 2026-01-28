@@ -102,9 +102,13 @@ export default class SaveGameManager {
             wave: save.wave, // +1 för att levels är 0-indexerade
             score: save.score,
             health: save.health,
+            maxHealth: save.maxHealth,
             playerStage: save.playerStage,
             playerX: save.playerX,
-            playerY: save.playerY
+            playerY: save.playerY,
+            playerWidth: save.playerWidth,
+            playerHeight: save.playerHeight,
+            shootCooldown: save.shootCooldown
         }
     }
 
