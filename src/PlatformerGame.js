@@ -6,6 +6,7 @@ import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
+import EnemyArrowIndicator from './EnemyArrowIndicator.js'
 
 // gun sprites
 import startGunSprite from "./assets/Project Tree/gun_start.png"
@@ -47,6 +48,9 @@ export default class PlatformerGame extends GameBase {
         // Background arrays (sätts av levels)
         this.backgrounds = []
         this.backgroundObjects = []
+
+        // Enemy Arrow Indicator.
+        this.enemyArrowIndicator = new EnemyArrowIndicator(this)
         
         // Save game system
         this.saveManager = new SaveGameManager('platformer-save')
@@ -502,5 +506,11 @@ export default class PlatformerGame extends GameBase {
         if (this.currentMenu) {
             this.currentMenu.draw(ctx)
         }
+
+        // Enemy direction arrows (UI layer)
+        this.enemies.forEach(enemy => {
+            this.enemyArrowIndicator.drawArrow(ctx, enemy)
+        })
+
     }
 }

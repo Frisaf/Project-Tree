@@ -9,17 +9,17 @@ export default class ControlsMenu extends Menu {
     getOptions() {
         return [
             {
-                text: 'Arrow Keys - Move',
+                text: 'Arrow Keys/WASD - Move',
                 key: null,
                 action: null
             },
             {
-                text: 'Space - Jump',
+                text: 'Space - Jump/Double Jump',
                 key: null,
                 action: null
             },
             {
-                text: 'X - Shoot',
+                text: 'M1 - Shoot',
                 key: null,
                 action: null
             },
