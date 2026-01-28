@@ -1,5 +1,6 @@
 import GameObject from "./GameObject"
 import flyingSprite from "./assets/Project Tree/Enemies/heli_fly.png"
+import flyingAudio from "./assets/Project Tree/Audio/flying.mp3"
 
 export default class FlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -26,6 +27,16 @@ export default class FlyingEnemy extends GameObject {
         this.shootCooldownTimer = 0
 
         this.loadSprite("fly", flyingSprite, 4, 80)
+
+        this.audio = new Audio(flyingAudio)
+        this.audio.volume = 0.1
+        this.audio.loop = true
+        this.audio.play().catch(e => console.log('Playing the audio failed:', e))
+    }
+
+    stopAudio() {
+        this.audio.pause()
+        this.audio.currentTime = 0
     }
 
     shoot() {

@@ -175,12 +175,14 @@ export default class PlatformerGame extends GameBase {
     nextWave() {
         this.currentWave += 1
         this.enemiesDefeated = 0
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
         
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
-
-        console.log(this.currentWave)
     }
     
     addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
@@ -192,6 +194,11 @@ export default class PlatformerGame extends GameBase {
         this.currentWave = 1, this.enemiesDefeated = 0
         this.currentMenu = null
         this.waterDrops = []
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
+        
         this.init()
         this.gameState = 'PLAYING',
         this.player.health = this.player.maxHealth / 2
@@ -404,6 +411,9 @@ export default class PlatformerGame extends GameBase {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
                     if (enemy.health <= 0) {
                         enemy.markedForDeletion = true
+
+                        enemy.stopAudio()
+
                         this.enemiesDefeated += 1
                         projectile.markedForDeletion = true
                         this.dropWater(enemy.x, enemy.y, enemy.drops)

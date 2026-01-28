@@ -1,6 +1,7 @@
 import GameObject from './GameObject.js'
 import runSprite from "./assets/Project Tree/Enemies/walking.png"
 import fallSprite from "./assets/Project Tree/Enemies/falling_walking.png"
+import walkingAudio from "./assets/Project Tree/Audio/walking.mp3"
 
 export default class Enemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -36,6 +37,12 @@ export default class Enemy extends GameObject {
         this.loadSprite("fall", fallSprite, 1)
 
         this.currentAnimation = "run"
+
+        this.audio = new Audio(walkingAudio)
+        this.audio.volume = 0.03
+        this.audio.speed = 2
+        this.audio.loop = true
+        this.audio.play().catch(e => console.log('Playing the audio failed:', e))
     }
 
     shoot() {
@@ -48,6 +55,11 @@ export default class Enemy extends GameObject {
         // Sätt cooldown
         this.canShoot = false
         this.shootCooldownTimer = this.shootCooldown
+    }
+
+    stopAudio() {
+        this.audio.pause()
+        this.audio.currentTime = 0
     }
 
     update(deltaTime) {
