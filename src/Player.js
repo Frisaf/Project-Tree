@@ -1,5 +1,6 @@
 import GameObject from './GameObject.js'
-import shootAudio from "./assets/Project Tree/Audio/player_shoot.mp3"
+import shootAudio from "./assets/Project Tree/Audio/player_shoot.wav"
+import hitAudio from "./assets/Project Tree/Audio/player_hit.wav"
 
 // Stage 1 sprites
 import idleSprite from "./assets/Project Tree/idle.png"
@@ -207,6 +208,11 @@ export default class Player extends GameObject {
         
         this.health -= amount
         if (this.health < 0) this.health = 0
+
+        const hitSfx = new Audio(hitAudio)
+
+        hitSfx.volume = 0.2
+        hitSfx.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt invulnerability efter att ha tagit skada
         this.invulnerable = true
