@@ -210,7 +210,22 @@ export default class PlatformerGame extends GameBase {
     /**
      * Sparar nuvarande spelläge
      */
-    
+    saveGame() {
+        // Kolla att spelaren finns (kan inte spara om spelet inte har startat)
+        if (!this.player) {
+            console.warn('Cannot save: game not started')
+            return false
+        }
+        
+        return this.saveManager.save({
+            wave: this.wave,
+            score: this.score,
+            health: this.player.health,
+            playerX: this.player.x,
+            playerY: this.player.y,
+            playerStage: this.playerStage
+        })
+    }
     /**
      * Laddar sparat spelläge
      * @returns {boolean} True om laddning lyckades
@@ -223,8 +238,25 @@ export default class PlatformerGame extends GameBase {
         }
         
         // Ladda level först
-        this.currentLevelIndex = saveData.currentLevelIndex
+        this.wave = saveData.wave
+        this.playerStage = saveData.playerStage
+        this.enemiesDefeated = 0
         this.loadLevel(this.currentLevelIndex)
+
+        if (this.playerStage === 1) {
+            this.backgrounds = this.currentLevel.createBackgrounds2()
+            this.platforms = this.currentLevel.createPlatforms2()
+        }
+
+        else if (this.playerStage === 2) {
+            this.backgrounds = this.currentLevel.createBackgrounds3()
+            this.platforms = this.currentLevel.createPlatforms3()
+        }
+
+        else if (this.playerStage === 3) {
+            this.backgrounds = this.currentLevel.createBackgrounds4()
+            this.platforms = this.currentLevel.createPlatforms4()
+        }
         
         // Återställ spelarens position och hälsa
         this.player.x = saveData.playerX
