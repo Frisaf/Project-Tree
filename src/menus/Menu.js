@@ -1,3 +1,8 @@
+import titlescreen from '../assets/Project Tree/Menu/titlescreen.png'
+import titleicon from '../assets/Project Tree/Menu/titletext.png'
+import startoptionimage from '../assets/Project Tree/Menu/start1.png'
+import controlsoptionimage from '../assets/Project Tree/Menu/control1.png'
+import quitoptionimage from '../assets/Project Tree/Menu/quit1.png'
 export default class Menu {
     constructor(game) {
         this.game = game
@@ -7,6 +12,7 @@ export default class Menu {
         this.title = this.getTitle()
         this.options = this.getOptions()
         
+
         // Hitta första valbara option (skippa null actions)
         this.selectedIndex = 0
         for (let i = 0; i < this.options.length; i++) {
@@ -17,7 +23,17 @@ export default class Menu {
         }
         
         // Visual styling
-        this.backgroundColor = 'rgba(0, 0, 0, 0.7)'
+        this.backgroundColor = 'rgba(0, 0, 0, 1)'
+        this.backgroundImage = new Image()
+        this.backgroundImage.src = titlescreen
+        this.titletextimage = new Image()
+        this.titletextimage.src = titleicon
+        this.startoption = new Image()
+        this.startoption.src = startoptionimage
+        this.controlsoption = new Image ()
+        this.controlsoption.src = controlsoptionimage
+        this.quitoption = new Image ()
+        this.quitoption.src = quitoptionimage
         this.titleColor = '#FFFFFF'
         this.optionColor = '#CCCCCC'
         this.selectedColor = '#FFD700'
@@ -81,17 +97,26 @@ export default class Menu {
         
         ctx.save()
         
-        // Rita halvgenomskinlig bakgrund
-        ctx.fillStyle = this.backgroundColor
-        ctx.fillRect(0, 0, this.game.width, this.game.height)
+        // Rita bakgrundsbild
+        if (this.backgroundImage && this.title === 'TitleScreen') {
+            ctx.drawImage(this.backgroundImage, 0, 0, this.game.width, this.game.height)
+        } else {
+            // Fallback till färg om bilden inte är laddad
+            ctx.fillStyle = this.backgroundColor
+            ctx.fillRect(0, 0, this.game.width, this.game.height)
+        }
         
         // Rita title
         ctx.fillStyle = this.titleColor
-        ctx.font = 'bold 48px Arial'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText(this.title, this.game.width / 2, 80)
-        
+            ctx.font = 'bold 48px Arial'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+        if (this.title === 'TitleScreen') {
+            ctx.drawImage(this.titletextimage, this.game.width / 2.35, 60, this.game.width / 6, 80)
+        } else {
+            ctx.fillText(this.title, this.game.width / 2, 80)
+        }
+
         // Rita options
         const startY = 160
         const lineHeight = 60
@@ -105,20 +130,16 @@ export default class Menu {
             ctx.fillStyle = isSelected ? this.selectedColor : this.optionColor
             
             // Lägg till ">" för vald option
-            const prefix = isSelected ? '> ' : '  '
-            let displayText = prefix + option.text
-            
-            // Lägg till key hint om det finns
-            if (option.key) {
-                ctx.fillText(displayText, this.game.width / 2 - 80, y)
-                
-                // Rita key hint i grön
-                ctx.fillStyle = this.keyColor
-                ctx.font = 'bold 24px Arial'
-                ctx.fillText(`[${option.key}]`, this.game.width / 2 + 150, y)
+            if (option.text === "Start") {
+                ctx.drawImage(this.startoption, this.game.width / 2.20, y, this.game.width / 10, y / 5)
+            } else if (option.text === "Controls") {
+                ctx.drawImage(this.controlsoption, this.game.width / 2.25, y, this.game.width / 8, y / 6)
+            } else if (option.text === "Quit") {
+                ctx.drawImage(this.quitoption, this.game.width / 2, y, this.game.width / 8, y / 7)
             } else {
-                ctx.fillText(displayText, this.game.width / 2, y)
+                ctx.fillText(displayText, this.game.width / 2, y)      
             }
+            
         })
         
         // Rita instruktioner längst ner
