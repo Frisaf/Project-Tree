@@ -1,5 +1,7 @@
 import GameObject from "./GameObject"
-import flyingSprite from "./assets/Project Tree/Enemies/flying.png"
+import flyingSprite from "./assets/Project Tree/Enemies/heli_fly.png"
+import flyingAudio from "./assets/Project Tree/Audio/flying.mp3"
+import shootAudio from "./assets/Project Tree/Audio/enemy_shoot.mp3"
 
 export default class FlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -13,7 +15,7 @@ export default class FlyingEnemy extends GameObject {
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
         
-        this.health = 2 // Fiendens hälsa
+        this.health = 1 // Fiendens hälsa
         this.damage = 2 // Hur mycket skada fienden gör
         this.drops = 4 // Antal vatten droppar som släpps vid död
 
@@ -25,7 +27,20 @@ export default class FlyingEnemy extends GameObject {
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
-        this.loadSprite("fly", flyingSprite, 2, 80)
+        this.loadSprite("fly", flyingSprite, 4, 80)
+
+        this.audio = new Audio(flyingAudio)
+        this.audio.volume = 0.1
+        this.audio.loop = true
+        this.audio.play().catch(e => console.log('Playing the audio failed:', e))
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.2
+    }
+
+    stopAudio() {
+        this.audio.pause()
+        this.audio.currentTime = 0
     }
 
     shoot() {
@@ -34,8 +49,10 @@ export default class FlyingEnemy extends GameObject {
 
         this.game.addProjectile(centerX, centerY, -1, null, true)
         this.game.addProjectile(centerX, centerY, 1, null, true)
-        this.game.addProjectile(centerX, centerY, null, -1, true)
-        this.game.addProjectile(centerX, centerY, null, 1, true)
+        //this.game.addProjectile(centerX, centerY, null, -1, true)
+        //this.game.addProjectile(centerX, centerY, null, 1, true)
+
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false
@@ -129,11 +146,10 @@ export default class FlyingEnemy extends GameObject {
 
         const spriteDrawn = this.drawSprite(ctx, camera, this.direction === -1)
 
-        
         if (!spriteDrawn) {
             // Rita fienden som en röd rektangel
             ctx.fillStyle = this.color
-            ctx.fillRect(screenX, screenY, this.width, this.height)
+            ctx.fillRect(screenX, screenY, this.width+20, this.height)
         }
     }
 }

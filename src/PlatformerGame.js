@@ -14,6 +14,9 @@ import gunSprite2 from "./assets/Project Tree/gun2.png"
 import gunSprite3 from "./assets/Project Tree/gun3.png"
 import gunSprite4 from "./assets/Project Tree/gun4.png"
 
+import mainTheme from "./assets/Project Tree/Audio/Väkst!.mp3"
+import waterDropSfx from "./assets/Project Tree/Audio/waterdrop.wav"
+
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
  * Innehåller plattformsspel-specifik logik som gravity, platforms, coins
@@ -39,11 +42,14 @@ export default class PlatformerGame extends GameBase {
 
         this.currentWave = 1
         this.enemiesDefeated = 0
+        this.wavecooldown = 0
+        this.wavetimer = 5000 // 5 sekunder mellan waves
+        this.wavespace = false
         
         // Plattformsspel-specifika arrays
         this.platforms = []
         this.projectiles = []
-        this.WaterDrops = []
+        this.waterDrops = []
         
         // Background arrays (sätts av levels)
         this.backgrounds = []
@@ -54,14 +60,13 @@ export default class PlatformerGame extends GameBase {
         
         // Save game system
         this.saveManager = new SaveGameManager('platformer-save')
-        
-        // Initiera spelet
-        this.init()
-        
-        // Skapa och visa huvudmenyn
-        this.currentMenu = new MainMenu(this)
 
-        this.gunConfigs = [ // stage 2 and up
+        this.gunConfigs = [
+            {
+                image: startGunSprite,
+                sourceWidth: 112,
+                sourceHeight: 21
+            },
             {
                 image: gunSprite2,
                 sourceWidth: 112,
@@ -78,6 +83,35 @@ export default class PlatformerGame extends GameBase {
                 sourceHeight: 35
             }
         ]
+
+        this.music = new Audio(mainTheme)
+        this.music.volume = 0.3
+        this.music.loop = true
+        
+        // Initiera spelet
+        this.init()
+        
+        // Skapa och visa huvudmenyn
+        this.currentMenu = new MainMenu(this)
+    }
+
+    nextStage() {
+        const playerStage = this.player.stage
+
+        if (playerStage === 1) {
+            this.backgrounds = this.currentLevel.createBackgrounds2()
+            this.platforms = this.currentLevel.createPlatforms2()
+        }
+
+        else if (playerStage === 2) {
+            this.backgrounds = this.currentLevel.createBackgrounds3()
+            this.platforms = this.currentLevel.createPlatforms3()
+        }
+
+        else if (playerStage === 3) {
+            this.backgrounds = this.currentLevel.createBackgrounds4()
+            this.platforms = this.currentLevel.createPlatforms4()
+        }
     }
     
     init() {
@@ -92,6 +126,11 @@ export default class PlatformerGame extends GameBase {
 
         // Ladda current level
         this.loadLevel(this.currentLevelIndex)
+
+        const levelData = this.currentLevel.getData()
+
+        this.backgrounds = levelData.backgrounds
+        this.platforms = levelData.platforms
     }
     
     loadLevel(levelIndex) {
@@ -109,11 +148,9 @@ export default class PlatformerGame extends GameBase {
         const levelData = this.currentLevel.getData()
         
         // Sätt level data
-        this.platforms = levelData.platforms
         this.enemies = levelData.enemies
         
         // Sätt background data
-        this.backgrounds = levelData.backgrounds
         this.backgroundObjects = levelData.backgroundObjects
         
         // Skapa player på level spawn position
@@ -124,15 +161,14 @@ export default class PlatformerGame extends GameBase {
                 levelData.playerSpawnY, 
                 50, 50, 'green'
             )
-        }
-        
-        this.startGunConfig = {
-            image: startGunSprite, 
-            sourceWidth: 112,
-            sourceHeight: 21,
+            this.music.play().catch(e => console.log('Playing the music failed:', e))
         }
 
-        this.gun = new Gun(this, levelData.playerSpawnX + this.player.width, levelData.playerSpawnY, 112, 21, {sprite: this.startGunConfig})
+        const playerStage = this.player.stage
+        const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+        const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
+
+        this.gun = new Gun(this, levelData.playerSpawnX + this.player.width, levelData.playerSpawnY, gunWidth, gunHeight, {sprite: this.gunConfigs[playerStage]})
         
         // Återställ projektiler
         this.projectiles = []
@@ -147,12 +183,14 @@ export default class PlatformerGame extends GameBase {
     nextWave() {
         this.currentWave += 1
         this.enemiesDefeated = 0
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
         
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
-
-        console.log(this.currentWave)
     }
     
     addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
@@ -163,7 +201,12 @@ export default class PlatformerGame extends GameBase {
     restart() {
         this.currentWave = 1, this.enemiesDefeated = 0
         this.currentMenu = null
-        this.WaterDrops = []
+        this.waterDrops = []
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
+        
         this.init()
         this.gameState = 'PLAYING',
         this.player.health = this.player.maxHealth / 2
@@ -180,14 +223,14 @@ export default class PlatformerGame extends GameBase {
         }
         
         return this.saveManager.save({
-            currentLevelIndex: this.currentLevelIndex,
+            wave: this.wave,
             score: this.score,
             health: this.player.health,
             playerX: this.player.x,
-            playerY: this.player.y
+            playerY: this.player.y,
+            playerStage: this.playerStage
         })
     }
-    
     /**
      * Laddar sparat spelläge
      * @returns {boolean} True om laddning lyckades
@@ -200,8 +243,25 @@ export default class PlatformerGame extends GameBase {
         }
         
         // Ladda level först
-        this.currentLevelIndex = saveData.currentLevelIndex
+        this.wave = saveData.wave
+        this.playerStage = saveData.playerStage
+        this.enemiesDefeated = 0
         this.loadLevel(this.currentLevelIndex)
+
+        if (this.playerStage === 1) {
+            this.backgrounds = this.currentLevel.createBackgrounds2()
+            this.platforms = this.currentLevel.createPlatforms2()
+        }
+
+        else if (this.playerStage === 2) {
+            this.backgrounds = this.currentLevel.createBackgrounds3()
+            this.platforms = this.currentLevel.createPlatforms3()
+        }
+
+        else if (this.playerStage === 3) {
+            this.backgrounds = this.currentLevel.createBackgrounds4()
+            this.platforms = this.currentLevel.createPlatforms4()
+        }
         
         // Återställ spelarens position och hälsa
         this.player.x = saveData.playerX
@@ -220,12 +280,15 @@ export default class PlatformerGame extends GameBase {
     }
 
     update(deltaTime) {
+
         // Uppdatera menyn om den är aktiv
         if (this.gameState === 'MENU' && this.currentMenu) {
             this.currentMenu.update(deltaTime)
             this.inputHandler.keys.clear() // Rensa keys så de inte läcker till spelet
             return
         }
+
+        
         
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
@@ -259,11 +322,11 @@ export default class PlatformerGame extends GameBase {
             this.inputHandler.keys.delete("b")
             this.player.grow()
 
-            const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
-            const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+            const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+            const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
 
             this.gun.markedForDeletion = true
-            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage]})
 
             this.gameState = "PLAYING"
             return
@@ -279,6 +342,11 @@ export default class PlatformerGame extends GameBase {
             return
         }
 
+        if (this.inputHandler.keys.has("j")) {
+            this.inputHandler.keys.delete("j")
+            this.nextStage()
+        }
+
         if (this.player.health === this.player.maxHealth && this.player.stage < 4) {
             this.gameState = "GROW_READY"
             
@@ -287,12 +355,13 @@ export default class PlatformerGame extends GameBase {
                 this.inputHandler.keys.delete("G")
 
                 this.player.grow()
+                this.nextStage()
 
-                const gunWidth = this.gunConfigs[this.player.stage - 1].sourceWidth
-                const gunHeight = this.gunConfigs[this.player.stage - 1].sourceHeight
+                const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+                const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
 
                 this.gun.markedForDeletion = true
-                this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage - 1]})
+                this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage]})
 
                 this.gameState = "PLAYING"
             }
@@ -352,10 +421,12 @@ export default class PlatformerGame extends GameBase {
         })
 
         // Kontrollera kollision med waterdrop
-        this.WaterDrops.forEach(WaterDrop => {
-            if (this.player.intersects(WaterDrop) && !WaterDrop.markedForDeletion) {
+        this.waterDrops.forEach(waterDrop => {
+            waterDrop.update(deltaTime)
+
+            if (this.player.intersects(waterDrop) && !waterDrop.markedForDeletion) {
                 this.player.gainHealth(1)
-                WaterDrop.markedForDeletion = true
+                waterDrop.markedForDeletion = true
             }
         })
         
@@ -368,6 +439,9 @@ export default class PlatformerGame extends GameBase {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
                     if (enemy.health <= 0) {
                         enemy.markedForDeletion = true
+
+                        enemy.stopAudio()
+
                         this.enemiesDefeated += 1
                         projectile.markedForDeletion = true
                         this.dropWater(enemy.x, enemy.y, enemy.drops)
@@ -385,7 +459,7 @@ export default class PlatformerGame extends GameBase {
             this.platforms.forEach(platform => {
                 this.projectileX = 0
                 this.projectileY = 0
-                if (projectile.intersects(platform) && !projectile.enemyProjectile) {
+                if (projectile.intersects(platform)) {
                     const projectiledata = projectile.getCollisionData(platform)
                     this.projectileY = projectile.y
 
@@ -406,7 +480,13 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                     }
                     
-                    if (!projectile.enemyProjectile) this.WaterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    if (!projectile.enemyProjectile) {
+                        this.waterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+
+                        const waterSfx = new Audio(waterDropSfx)
+                        waterSfx.volume = 0.3
+                        waterSfx.play().catch(e => console.log('Playing the sfx failed:', e))
+                    }
                     projectile.markedForDeletion = true
                 }
             })
@@ -420,7 +500,7 @@ export default class PlatformerGame extends GameBase {
         // Ta bort objekt markerade för borttagning
         this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion)
         this.projectiles = this.projectiles.filter(projectile => !projectile.markedForDeletion)
-        this.WaterDrops = this.WaterDrops.filter(WaterDrops => !WaterDrops.markedForDeletion)
+        this.waterDrops = this.waterDrops.filter(WaterDrops => !WaterDrops.markedForDeletion)
 
         // Förhindra att spelaren går utöver world bounds
         if (this.player.x < 0) {
@@ -436,14 +516,24 @@ export default class PlatformerGame extends GameBase {
         
         const levelData = this.currentLevel.getData()
 
+        // Next wave condition när alla fiender är besegrade, med countdown innan waven startar
         if (this.enemiesDefeated === levelData.enemyAmount + 1) {
-            this.nextWave()
+            if (this.wavespace === false) {
+                this.wavecooldown = this.wavetimer
+                this.wavespace = true
+            } else {
+                this.wavecooldown -= deltaTime
+                if (this.wavecooldown <= 0) {
+                    this.nextWave()
+                    this.wavespace = false
+                }
+            }
         }
-        
+    
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
             this.gameState = 'GAME_OVER'
-            this.WaterDrops.forEach(WaterDrop => {
+            this.waterDrops.forEach(WaterDrop => {
                 WaterDrop.markedForDeletion = true
             })
         }
@@ -453,7 +543,7 @@ export default class PlatformerGame extends GameBase {
         for (let i = 0; i < drops; i++) {
             const randomDrop = Math.floor(Math.random() * 15)
             const Water = new WaterDrop(this, x + i * randomDrop, y + i)
-            this.WaterDrops.push(Water)    
+            this.waterDrops.push(Water)    
         }
         
     }
@@ -490,7 +580,7 @@ export default class PlatformerGame extends GameBase {
             }
         })
 
-        this.WaterDrops.forEach(drop => {
+        this.waterDrops.forEach(drop => {
             drop.draw(ctx, this.camera)
         } )
 

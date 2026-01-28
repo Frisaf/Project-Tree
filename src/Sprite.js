@@ -1,4 +1,5 @@
-import terrain from "./assets/Pixel Adventure 1/Terrain/Terrain (16x16).png"
+import ground1 from "./assets/Project Tree/Environment/ground1.png"
+import platform1 from "./assets/Project Tree/Environment/platform1.png"
 
 /**
  * Sprite - För att rita ut statiska bilder och tilade terrängbitar
@@ -23,51 +24,19 @@ export default class Sprite {
      * @param {boolean} [config.ground]
      */
     constructor(config) {
-        const groundConfig = {
-            image: terrain,
-            sourceWidth: 48,
-            sourceHeight: 48,
-            tile: "both",
-            sourceX: 96,
-        }
-        const platformConfig = {
-            image: terrain,
-            sourceWidth: 32,
-            sourceHeight: 32,
-            tile: "both",
-            sourceX: 208,
-            sourceY: 16
-        }
 
         this.image = new Image()
+        this.image.src = config.image
+        // Source dimensions (size in sprite sheet)
+        this.sourceWidth = config.sourceWidth
+        this.sourceHeight = config.sourceHeight
         
-        if (config.platform) {
-            this.image.src = platformConfig.image
-            this.sourceWidth = platformConfig.sourceWidth
-            this.sourceHeight = platformConfig.sourceHeight
-            this.tile = platformConfig.tile
-            this.sourceX = platformConfig.sourceX
-            this.sourceY = platformConfig.sourceY
-        } else if (config.ground) {
-            this.image.src = groundConfig.image
-            this.sourceWidth = groundConfig.sourceWidth
-            this.sourceHeight = groundConfig.sourceHeight
-            this.tile = groundConfig.tile
-            this.sourceX = groundConfig.sourceX
-            this.sourceY = 0
-        } else {
-            this.image.src = config.image
-            // Source dimensions (size in sprite sheet)
-            this.sourceWidth = config.sourceWidth
-            this.sourceHeight = config.sourceHeight
-            
-            // Source position in sprite sheet
-            this.sourceX = config.sourceX || 0
-            this.sourceY = config.sourceY || 0
-            
-            // Tiling mode
-            this.tile = config.tile || 'none' // 'none', 'horizontal', 'vertical', 'both'
-        }
+        // Source position in sprite sheet
+        this.sourceX = config.sourceX || 0
+        this.sourceY = config.sourceY || 0
+        
+        // Tiling mode
+        this.tile = config.tile || 'none' // 'none', 'horizontal', 'vertical', 'both'
 
         this.loaded = false
         

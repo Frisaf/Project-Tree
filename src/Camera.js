@@ -41,7 +41,6 @@ export default class Camera {
         if (targetCenterX > 2400) {
             this.targetX = this.worldWidth / 1.95
         }
-        console.log(this.targetX, this.targetY)
     }
     
     update(deltaTime) {

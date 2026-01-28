@@ -1,4 +1,6 @@
 import GameObject from './GameObject.js'
+import shootAudio from "./assets/Project Tree/Audio/player_shoot.wav"
+import hitAudio from "./assets/Project Tree/Audio/player_hit.wav"
 
 // Stage 1 sprites
 import idleSprite from "./assets/Project Tree/idle.png"
@@ -48,11 +50,11 @@ export default class Player extends GameObject {
         this.health = this.maxHealth / 2
         this.invulnerable = false // Immun mot skada efter att ha blivit träffad
         this.invulnerableTimer = 0
-        // this.invulnerableDuration = 1000 // 1 sekund i millisekunder
-        this.invulnerableDuration = 10000000000000000 // TEST
+        this.invulnerableDuration = 1000 // 1 sekund i millisekunder
+        // this.invulnerableDuration = 10000000000000000 // TEST
         // Shooting system
         this.canShoot = true
-        this.shootCooldown = 300 // millisekunder mellan skott
+        this.shootCooldown = 500 // millisekunder mellan skott
         this.shootCooldownTimer = 0
         this.lastDirectionX = 1 // Kom ihåg senaste riktningen för skjutning
 
@@ -71,6 +73,9 @@ export default class Player extends GameObject {
         this.loadSprite('fall', fallSprite, 1)
         
         this.currentAnimation = 'idle'
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.3
     }
 
     update(deltaTime) {
@@ -123,6 +128,8 @@ export default class Player extends GameObject {
         // Uppdatera position baserat på hastighet
         this.x += this.velocityX * deltaTime
         this.y += this.velocityY * deltaTime
+        
+
         
         // Uppdatera invulnerability timer
         if (this.invulnerable) {
@@ -191,6 +198,7 @@ export default class Player extends GameObject {
         const directionY = dy / distance
         
         this.game.addProjectile(centerX, centerY, directionX, directionY)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false
@@ -202,6 +210,11 @@ export default class Player extends GameObject {
         
         this.health -= amount
         if (this.health < 0) this.health = 0
+
+        const hitSfx = new Audio(hitAudio)
+
+        hitSfx.volume = 0.2
+        hitSfx.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt invulnerability efter att ha tagit skada
         this.invulnerable = true
@@ -218,6 +231,7 @@ export default class Player extends GameObject {
         this.stage++
         this.width *= 1.25
         this.height *= 1.25
+        this.shootCooldown *= 0.7 // Minska cooldown med 30%
         
         const runFrames = this.playerSprites[this.stage][4]
         

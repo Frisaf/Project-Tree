@@ -1,6 +1,8 @@
 import GameObject from './GameObject.js'
 import runSprite from "./assets/Project Tree/Enemies/walking.png"
 import fallSprite from "./assets/Project Tree/Enemies/falling_walking.png"
+import walkingAudio from "./assets/Project Tree/Audio/walking.mp3"
+import shootAudio from "./assets/Project Tree/Audio/enemy_shoot.mp3"
 
 export default class Enemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -27,10 +29,24 @@ export default class Enemy extends GameObject {
         this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
+        this.canJump = true
+        this.jumpCooldown = Math.floor(5000 + Math.random() * 10000)
+        this.jumpCooldownTimer = Math.floor(5000 + Math.random() * 10000)
+        this.jumpPower = -0.6
+
         this.loadSprite("run", runSprite, 6, 100)
         this.loadSprite("fall", fallSprite, 1)
 
-        
+        this.currentAnimation = "run"
+
+        this.audio = new Audio(walkingAudio)
+        this.audio.volume = 0.03
+        this.audio.speed = 2
+        this.audio.loop = true
+        this.audio.play().catch(e => console.log('Playing the audio failed:', e))
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.2
     }
 
     shoot() {
@@ -39,10 +55,16 @@ export default class Enemy extends GameObject {
 
         this.game.addProjectile(centerX, centerY, -1, null, true)
         this.game.addProjectile(centerX, centerY, 1, null, true)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false
         this.shootCooldownTimer = this.shootCooldown
+    }
+
+    stopAudio() {
+        this.audio.pause()
+        this.audio.currentTime = 0
     }
 
     update(deltaTime) {
@@ -89,11 +111,23 @@ export default class Enemy extends GameObject {
             this.shoot()
         )
 
+        if (!this.canJump) {
+            this.jumpCooldownTimer -= deltaTime
+
+            if (this.shootCooldownTimer <= 0) {
+                this.canJump = true
+            }
+        }
+
+        else {
+            this.jump()
+        }
+
         if (this.velocityX !== 0) {
             this.setAnimation("run")
         }
 
-        else if (!this.isGrounded && this.velocityY > 0) {
+        else if (!this.isGrounded) {
             this.setAnimation("fall")
         }
 
@@ -126,8 +160,14 @@ export default class Enemy extends GameObject {
     }
     
     handleEnemyCollision(otherEnemy) {
-        if (this.intersects(otherEnemy)) {
+        const collisionData = this.getCollisionData(otherEnemy)
+
+        if (this.intersects(otherEnemy) && (collisionData.direction === "left" || collisionData.direction === "right")) {
             this.direction *= -1
+        }
+
+        else if (this.intersects(otherEnemy) && (collisionData.direction === "top")) {
+            this.canJump = true
         }
     }
     
@@ -142,6 +182,14 @@ export default class Enemy extends GameObject {
                 this.direction = -1
             }
         }
+    }
+
+    jump() {
+        this.velocityY = this.jumpPower
+        this.velocityX = this.speed
+        this.canJump = false
+        this.isGrounded = false
+        this.shootCooldownTimer = this.jumpCooldown
     }
 
     draw(ctx, camera = null) {

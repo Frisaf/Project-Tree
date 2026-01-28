@@ -1,110 +1,108 @@
 import GameObject from "./GameObject"
-import tankSprite from "./assets/Project Tree/Enemies/tank.png"
-import tankAudio from "./assets/Project Tree/Audio/tank.mp3"
+import strongflyingSprite from "./assets/Project Tree/Enemies/flying.png"
+import strongFlyingAudio from "./assets/Project Tree/Audio/strong_flying.mp3"
 import shootAudio from "./assets/Project Tree/Audio/enemy_shoot.mp3"
 
-export default class Enemy extends GameObject {
+export default class StrongFlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
         super(game, x, y, width, height)
-        this.color = 'black' // svart
-        
-        // Fysik
+        this.color = "orange"
         this.velocityX = 0
-        this.velocityY = 0
-        this.isGrounded = false
-        
-        // Patrol AI
+
         this.startX = x
         this.patrolDistance = patrolDistance
         this.endX = patrolDistance !== null ? x + patrolDistance : null
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
         
-        this.health = 10 // Fiendens hälsa
+        this.health = 2 // Fiendens hälsa
         this.damage = 3 // Hur mycket skada fienden gör
-        this.drops = 15 // Antal vatten droppar som släpps vid död
+        this.drops = 4 // Antal vatten droppar som släpps vid död
+
+        this.bobOffset = 0
+        this.bobSpeed = 0.04 // hur snabbt fienden gungar
+        this.bobDistance = 10 // hur långt upp/ner fienden rör sig
 
         this.canShoot = true
-        this.shootCooldown = Math.floor(5000 + Math.random() * 8000) // millisekunder mellan skott
+        this.shootCooldown = Math.floor(3000 + Math.random() * 5000) // millisekunder mellan skott
         this.shootCooldownTimer = 0
 
-        this.loadSprite("tank", tankSprite, 2, 80)
-        
-        this.currentAnimation = "tank"
+        this.loadSprite("fly", strongflyingSprite, 2, 80)
 
-        this.audio = new Audio(tankAudio)
-        this.audio.volume = 0.05
+        this.audio = new Audio(strongFlyingAudio)
         this.audio.loop = true
+        this.audio.volume = 0.05
         this.audio.play().catch(e => console.log('Playing the audio failed:', e))
 
         this.shootAudio = new Audio(shootAudio)
         this.shootAudio.volume = 0.2
     }
 
-    update(deltaTime) {
-        // Applicera gravitation
-        this.velocityY += this.game.gravity * deltaTime
-        
-        // Applicera luftmotstånd
-        if (this.velocityY > 0) {
-            this.velocityY -= this.game.friction * deltaTime
-            if (this.velocityY < 0) this.velocityY = 0
-        }
-        
-        // Patruller när på marken
-        if (this.isGrounded) {
-            this.velocityX = this.speed * this.direction
-            
-            // Om vi har en patrolldistans, vänd vid ändpunkter
-            if (this.patrolDistance !== null) {
-                if (this.x >= this.endX) {
-                    this.direction = -1
-                    this.x = this.endX
-                } else if (this.x <= this.startX) {
-                    this.direction = 1
-                    this.x = this.startX
-                }
-            }
-            // Annars fortsätter fienden tills den kolliderar med något
-        } else {
-            this.velocityX = 0
-        }
-        
-        // Uppdatera position
-        this.x += this.velocityX * deltaTime
-        this.y += this.velocityY * deltaTime
-        
-        this.setAnimation("tank")
-        this.updateAnimation(deltaTime)
-
-        if (!this.canShoot) {
-            this.shootCooldownTimer -= deltaTime
-            if (this.shootCooldownTimer <= 0) {
-                this.canShoot = true
-            }
-        } else {
-            this.shoot()
-        }
-    }
-
     stopAudio() {
         this.audio.pause()
         this.audio.currentTime = 0
     }
+
+    shoot() {
+        const centerX = this.x + this.width / 2
+        const centerY = this.y + this.height / 2
+
+        this.game.addProjectile(centerX, centerY, -1, null, true)
+        this.game.addProjectile(centerX, centerY, 1, null, true)
+        this.game.addProjectile(centerX, centerY, null, -1, true)
+        this.game.addProjectile(centerX, centerY, null, 1, true)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
+        // Sätt cooldown
+        this.canShoot = false
+        this.shootCooldownTimer = this.shootCooldown
+    }
+
+    update(deltaTime) {
+        this.velocityX = this.speed * this.direction
+            
+            // Om vi har en patrolldistans, vänd vid ändpunkter
+        if (this.patrolDistance !== null) {
+            if (this.x >= this.endX) {
+                this.direction = -1
+                this.x = this.endX
+            } else if (this.x <= this.startX) {
+                this.direction = 1
+                this.x = this.startX
+            }
+        }
+
+        this.bobOffset += this.bobSpeed * deltaTime
+        this.x += this.velocityX * deltaTime
+        this.y += this.bobSpeed * deltaTime
+
+        if (!this.canShoot) {
+        this.shootCooldownTimer -= deltaTime
+            if (this.shootCooldownTimer <= 0) {
+                this.canShoot = true
+            }
+        }
+
+        else (
+            this.shoot()
+        )
+
+        this.setAnimation("fly")
+        this.updateAnimation(deltaTime)
+    }
+
     handlePlatformCollision(platform) {
         const collision = this.getCollisionData(platform)
         
         if (collision) {
-            if (collision.direction === 'top' && this.velocityY > 0) {
+            if (collision.direction === 'top' && this.bobSpeed > 0) {
                 // Fienden landar på plattformen
                 this.y = platform.y - this.height
-                this.velocityY = 0
-                this.isGrounded = true
-            } else if (collision.direction === 'bottom' && this.velocityY < 0) {
+                this.bobSpeed *= -1
+            } else if (collision.direction === 'bottom' && this.bobSpeed < 0) {
                 // Fienden träffar huvudet
                 this.y = platform.y + platform.height
-                this.velocityY = 0
+                this.bobSpeed *= -1
             } else if (collision.direction === 'left' && this.velocityX > 0) {
                 // Fienden träffar vägg - vänd
                 this.x = platform.x - this.width
@@ -122,7 +120,7 @@ export default class Enemy extends GameObject {
             this.direction *= -1
         }
     }
-    
+
     handleScreenBounds(gameWidth) {
         // Vänd vid skärmkanter (för fiender utan patrolDistance)
         if (this.patrolDistance === null) {
@@ -134,18 +132,10 @@ export default class Enemy extends GameObject {
                 this.direction = -1
             }
         }
-    }
 
-    shoot() {
-        const centerX = this.x + this.width / 2
-        const centerY = this.y + this.height / 2
-
-        this.game.addProjectile(centerX, centerY, null, -1, true)
-        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
-        
-        // Sätt cooldown
-        this.canShoot = false
-        this.shootCooldownTimer = this.shootCooldown
+        if (this.y < 0) {
+            this.bobSpeed *= -1
+        }
     }
 
     draw(ctx, camera = null) {
@@ -158,8 +148,7 @@ export default class Enemy extends GameObject {
         if (!spriteDrawn) {
             // Rita fienden som en röd rektangel
             ctx.fillStyle = this.color
-            ctx.fillRect(screenX, screenY, this.width, this.height)
+            ctx.fillRect(screenX, screenY, this.width+20, this.height)
         }
     }
-    
 }

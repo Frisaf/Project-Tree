@@ -25,7 +25,7 @@ export default class Level {
         this.playerSpawnX = 50
         this.playerSpawnY = 50
 
-        this.enemyAmount = Math.floor(4^(this.game.currentWave / 10) + 7)
+        this.enemyAmount = Math.floor(this.game.currentWave + 3)
     }
 
     /**

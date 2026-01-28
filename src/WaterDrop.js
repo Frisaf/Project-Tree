@@ -1,4 +1,5 @@
 import GameObject from './GameObject'
+import waterdropSprite from "./assets/Project Tree/waterdrop.png"
 
 export default class WaterDrop extends GameObject{
     constructor(game, x, y, width = 30, height = 30){
@@ -11,12 +12,25 @@ export default class WaterDrop extends GameObject{
 
         this.width = width
         this.height = height
+
+        this.loadSprite("waterdrop", waterdropSprite, 4, 150)
+        this.currentAnimation = "waterdrop"
+    }
+
+    update(deltaTime) {
+        this.setAnimation("waterdrop")
+        this.updateAnimation(deltaTime)
     }
 
     draw(ctx, camera) {
         const screenX = camera ? this.x - camera.x : this.x
         const screenY = camera ? this.y - camera.y : this.y
-        ctx.fillStyle = this.color
-        ctx.fillRect(screenX, screenY, this.width, this.height)
+
+        const spriteDrawn = this.drawSprite(ctx, camera)
+
+        if (!spriteDrawn) {
+            ctx.fillStyle = this.color
+            ctx.fillRect(screenX, screenY, this.width, this.height)
+        }
     }
 }
