@@ -80,11 +80,11 @@ export default class Player extends GameObject {
 
     update(deltaTime) {
         // Horisontell rörelse
-        if ((this.game.inputHandler.keys.has('a')) || (this.game.inputHandler.keys.has('A'))) {
+        if (this.game.inputHandler.keys.has('a') || this.game.inputHandler.keys.has('A') || this.game.inputHandler.keys.has('ArrowLeft')) {
             this.velocityX = -this.moveSpeed
             this.directionX = -1
             this.lastDirectionX = -1 // Spara riktning
-        } else if ((this.game.inputHandler.keys.has('d')) || this.game.inputHandler.keys.has('D')) {
+        } else if (this.game.inputHandler.keys.has('d') || this.game.inputHandler.keys.has('D') || this.game.inputHandler.keys.has('ArrowRight')) {
             this.velocityX = this.moveSpeed
             this.directionX = 1
             this.lastDirectionX = 1 // Spara riktning
@@ -94,11 +94,13 @@ export default class Player extends GameObject {
         }
 
         // Hopp - endast om spelaren är på marken
-        if (this.game.inputHandler.keys.has(' ') && this.jumps < 2) {
+        if (this.game.inputHandler.keys.has(' ') && this.jumps < 2 || this.game.inputHandler.keys.has('ArrowUp') && this.jumps < 2 || this.game.inputHandler.keys.has('w') && this.jumps < 2) {
             this.velocityY = this.jumpPower
             this.jumps += 1
             this.isGrounded = false
             this.game.inputHandler.keys.delete(" ")
+            this.game.inputHandler.keys.delete("ArrowUp")
+            this.game.inputHandler.keys.delete("w") || this.game.inputHandler.keys.delete("W") 
         }
 
         if (this.isGrounded) {
