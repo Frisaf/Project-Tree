@@ -1,6 +1,7 @@
 import GameObject from "./GameObject"
 import strongflyingSprite from "./assets/Project Tree/Enemies/flying.png"
 import strongFlyingAudio from "./assets/Project Tree/Audio/strong_flying.mp3"
+import shootAudio from "./assets/Project Tree/Audio/enemy_shoot.mp3"
 
 export default class StrongFlyingEnemy extends GameObject {
     constructor(game, x, y, width, height, patrolDistance = null) {
@@ -32,6 +33,9 @@ export default class StrongFlyingEnemy extends GameObject {
         this.audio.loop = true
         this.audio.volume = 0.05
         this.audio.play().catch(e => console.log('Playing the audio failed:', e))
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.2
     }
 
     stopAudio() {
@@ -47,6 +51,7 @@ export default class StrongFlyingEnemy extends GameObject {
         this.game.addProjectile(centerX, centerY, 1, null, true)
         this.game.addProjectile(centerX, centerY, null, -1, true)
         this.game.addProjectile(centerX, centerY, null, 1, true)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false
