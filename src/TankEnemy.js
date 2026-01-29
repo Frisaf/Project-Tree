@@ -19,9 +19,18 @@ export default class Enemy extends GameObject {
         this.endX = patrolDistance !== null ? x + patrolDistance : null
         this.speed = 0.1
         this.direction = 1 // 1 = höger, -1 = vänster
+        this.damageMod = 0
+
+        if (this.game.currentWave > 5 && this.game.currentWave < 7) {
+            this.damageMod = 2
+        } else if (this.game.currentWave > 7 && this.game.currentWave < 15) {
+            this.damageMod = 3
+        } else if (this.game.currentWave > 15) {
+            this.damageMod = 6
+        }
         
         this.health = 10 // Fiendens hälsa
-        this.damage = 3 // Hur mycket skada fienden gör
+        this.damage = 3 + this.damageMod// Hur mycket skada fienden gör
         this.drops = 15 // Antal vatten droppar som släpps vid död
 
         this.canShoot = true

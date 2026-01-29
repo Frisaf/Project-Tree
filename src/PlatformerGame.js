@@ -343,6 +343,7 @@ export default class PlatformerGame extends GameBase {
             if (this.player.intersects(enemy) && !enemy.markedForDeletion) {
                 // Spelaren tar skada
                 this.player.takeDamage(enemy.damage)
+                console.log(enemy.damage)
             }
         })
 

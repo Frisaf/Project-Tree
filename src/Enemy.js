@@ -22,7 +22,17 @@ export default class Enemy extends GameObject {
         this.direction = 1 // 1 = höger, -1 = vänster
         
         this.health = 1 // Fiendens hälsa
-        this.damage = 1 // Hur mycket skada fienden gör
+        this.damageMod = 0
+
+        if (this.game.currentWave > 5 && this.game.currentWave < 7) {
+            this.damageMod = 2
+        } else if (this.game.currentWave > 7 && this.game.currentWave < 15) {
+            this.damageMod = 3
+        } else if (this.game.currentWave > 15) {
+            this.damageMod = 6
+        }
+
+        this.damage = 1 + this.damageMod // Hur mycket skada fienden gör
         this.drops = 3 // Antal vatten droppar som släpps vid död
 
         this.canShoot = true
