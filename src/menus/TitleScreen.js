@@ -33,7 +33,7 @@ export default class TitleScreen extends Menu {
             text: 'Quit',
             key: 'l',
             action: () => {
-                return
+                this.game.close()
             }
         })
         

@@ -1,8 +1,11 @@
 import titlescreen from '../assets/Project Tree/Menu/titlescreen.png'
 import titleicon from '../assets/Project Tree/Menu/titletext.png'
-import startoptionimage from '../assets/Project Tree/Menu/start1.png'
-import controlsoptionimage from '../assets/Project Tree/Menu/control1.png'
-import quitoptionimage from '../assets/Project Tree/Menu/quit1.png'
+import startoptionimage from '../assets/Project Tree/Menu/starts.png'
+import startoptionselect from '../assets/Project Tree/Menu/starts2.png'
+import controlsoptionimage from '../assets/Project Tree/Menu/controls.png'
+import controlsoptionselect from '../assets/Project Tree/Menu/controls2.png'
+import quitoptionimage from '../assets/Project Tree/Menu/quits.png'
+import quitoptionselect from '../assets/Project Tree/Menu/quits2.png'
 export default class Menu {
     constructor(game) {
         this.game = game
@@ -34,6 +37,12 @@ export default class Menu {
         this.controlsoption.src = controlsoptionimage
         this.quitoption = new Image ()
         this.quitoption.src = quitoptionimage
+        this.startselect = new Image()
+        this.startselect.src = startoptionselect
+        this.controlselect = new Image()
+        this.controlselect.src = controlsoptionselect
+        this.quitselect = new Image()
+        this.quitselect.src = quitoptionselect
         this.titleColor = '#FFFFFF'
         this.optionColor = '#CCCCCC'
         this.selectedColor = '#FFD700'
@@ -112,7 +121,7 @@ export default class Menu {
             ctx.textAlign = 'center'
             ctx.textBaseline = 'middle'
         if (this.title === 'TitleScreen') {
-            ctx.drawImage(this.titletextimage, this.game.width / 2.35, 60, this.game.width / 6, 80)
+            ctx.drawImage(this.titletextimage, this.game.width / 2.45, 60, this.game.width / 5, 90)
         } else {
             ctx.fillText(this.title, this.game.width / 2, 80)
         }
@@ -130,12 +139,27 @@ export default class Menu {
             ctx.fillStyle = isSelected ? this.selectedColor : this.optionColor
             
             // Lägg till ">" för vald option
+            const prefix = isSelected ? '> ' : '  '
+            let displayText = prefix + option.text
+            console.log(displayText) 
             if (option.text === "Start") {
-                ctx.drawImage(this.startoption, this.game.width / 2.20, y, this.game.width / 10, y / 5)
+                if (isSelected) {
+                    ctx.drawImage(this.startselect, this.game.width / 2.20, y + 40, this.game.width / 10, y / 5)
+                } else {
+                    ctx.drawImage(this.startoption, this.game.width / 2.20, y + 40, this.game.width / 10, y / 5)    
+                }
             } else if (option.text === "Controls") {
-                ctx.drawImage(this.controlsoption, this.game.width / 2.25, y, this.game.width / 8, y / 6)
+                if (isSelected) {
+                    ctx.drawImage(this.controlselect, this.game.width / 2.20, y + 60, this.game.width / 10, y / 6)
+                } else {
+                    ctx.drawImage(this.controlsoption, this.game.width / 2.20, y + 60, this.game.width / 10, y / 6)    
+                }
             } else if (option.text === "Quit") {
-                ctx.drawImage(this.quitoption, this.game.width / 2, y, this.game.width / 8, y / 7)
+                if (isSelected) {
+                    ctx.drawImage(this.quitselect, this.game.width / 2.12, y + 80, this.game.width / 15, y / 6)
+                } else {
+                    ctx.drawImage(this.quitoption, this.game.width / 2.12, y + 80, this.game.width / 15, y / 6)    
+                }
             } else {
                 ctx.fillText(displayText, this.game.width / 2, y)      
             }

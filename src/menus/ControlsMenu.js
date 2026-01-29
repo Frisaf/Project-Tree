@@ -1,5 +1,6 @@
 import Menu from './Menu.js'
 import MainMenu from './MainMenu.js'
+import TitleScreen from './TitleScreen.js'
 
 export default class ControlsMenu extends Menu {
     getTitle() {
@@ -38,7 +39,7 @@ export default class ControlsMenu extends Menu {
                 key: 'Escape',
                 action: () => {
                     this.game.gameState = 'MENU'
-                    this.game.currentMenu = new MainMenu(this.game)
+                    this.game.currentMenu = new TitleScreen(this.game)
                 }
             }
         ]
