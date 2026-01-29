@@ -229,10 +229,16 @@ export default class PlatformerGame extends GameBase {
         
         const saveData = this.saveManager.getSaveInfo()
 
-        if (this.score > saveData.score) {
+        if (saveData) {
+            if (this.score > saveData.score) {
+                return this.saveManager.save({
+                    score: this.score,
+                })
+            }
+        } else {
             return this.saveManager.save({
-            score: this.score,
-        })
+                score: this.score
+            })
         }
     }
 
