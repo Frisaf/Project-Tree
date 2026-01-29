@@ -243,7 +243,7 @@ export default class PlatformerGame extends GameBase {
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
             this.gameState = 'MENU'
-            this.currentMenu = new MainMenu(this)
+            this.currentMenu = new TitleScreen(this)
             return
         }
         
@@ -508,9 +508,11 @@ export default class PlatformerGame extends GameBase {
         }
 
         // Enemy direction arrows (UI layer)
-        this.enemies.forEach(enemy => {
-            this.enemyArrowIndicator.drawArrow(ctx, enemy)
-        })
+        if (this.gameState != 'MENU') {
+            this.enemies.forEach(enemy => {
+                this.enemyArrowIndicator.drawArrow(ctx, enemy)
+            })
+        }
 
     }
 }
