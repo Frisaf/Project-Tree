@@ -617,9 +617,11 @@ export default class PlatformerGame extends GameBase {
         }
 
         // Enemy direction arrows (UI layer)
-        this.enemies.forEach(enemy => {
-            this.enemyArrowIndicator.drawArrow(ctx, enemy)
-        })
+        if (this.gameState != 'MENU') {
+            this.enemies.forEach(enemy => {
+                this.enemyArrowIndicator.drawArrow(ctx, enemy)
+            })
+        }
 
     }
 }
