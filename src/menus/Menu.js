@@ -142,8 +142,7 @@ export default class Menu {
             // Lägg till ">" för vald option
             const prefix = isSelected ? '> ' : '  '
             let displayText = prefix + option.text
-            console.log(displayText) 
-            if (option.text === "Start") {
+            if (option.text === "Start" || option.text === "Start Game") {
                 if (isSelected) {
                     ctx.drawImage(this.startselect, this.game.width / 2.29, y + 200, this.game.width / 8, y / 5)
                 } else {
@@ -164,12 +163,11 @@ export default class Menu {
             } else {
                 ctx.fillText(displayText, this.game.width / 2, y)      
             }
-            
         })
 
         const saveData = this.game.saveManager.getSaveInfo()
 
-        if (saveData.score) {
+        if (saveData) {
             ctx.font = '30px "Pixelify Sans", sans-serif'
             ctx.fillStyle = "white"
             ctx.fillText(`High score: ${saveData.score}`, 800, this.game.height - 100)
