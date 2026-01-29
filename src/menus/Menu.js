@@ -4,8 +4,8 @@ import startoptionimage from '../assets/Project Tree/Menu/starts.png'
 import startoptionselect from '../assets/Project Tree/Menu/starts2.png'
 import controlsoptionimage from '../assets/Project Tree/Menu/controls.png'
 import controlsoptionselect from '../assets/Project Tree/Menu/controls2.png'
-import quitoptionimage from '../assets/Project Tree/Menu/quits.png'
-import quitoptionselect from '../assets/Project Tree/Menu/quits2.png'
+import quitoptionimage from '../assets/Project Tree/Menu/credits1.png'
+import quitoptionselect from '../assets/Project Tree/Menu/credits2.png'
 
 export default class Menu {
     constructor(game) {
@@ -118,7 +118,7 @@ export default class Menu {
         
         // Rita title
         ctx.fillStyle = this.titleColor
-            ctx.font = 'bold 48px Arial'
+            ctx.font = 'bold 48px "Pixelify Sans", sans-serif'
             ctx.textAlign = 'center'
             ctx.textBaseline = 'middle'
         if (this.title === 'TitleScreen') {
@@ -156,9 +156,9 @@ export default class Menu {
                 }
             } else if (option.text === "Credits") {
                 if (isSelected) {
-                    ctx.drawImage(this.quitselect, this.game.width / 2.12, y + 210, this.game.width / 15, y / 6)
+                    ctx.drawImage(this.quitselect, this.game.width / 2.20, y + 210, this.game.width / 10, y / 6)
                 } else {
-                    ctx.drawImage(this.quitoption, this.game.width / 2.12, y + 210, this.game.width / 15, y / 6)    
+                    ctx.drawImage(this.quitoption, this.game.width / 2.20, y + 210, this.game.width / 10, y / 6)    
                 }
             } else {
                 ctx.fillText(displayText, this.game.width / 2, y)      
