@@ -154,7 +154,7 @@ export default class Menu {
                 } else {
                     ctx.drawImage(this.controlsoption, this.game.width / 2.20, y + 200, this.game.width / 10, y / 6)    
                 }
-            } else if (option.text === "Quit") {
+            } else if (option.text === "Credits") {
                 if (isSelected) {
                     ctx.drawImage(this.quitselect, this.game.width / 2.12, y + 210, this.game.width / 15, y / 6)
                 } else {

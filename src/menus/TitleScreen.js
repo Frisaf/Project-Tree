@@ -1,5 +1,6 @@
 import Menu from './Menu.js'
 import ControlsMenu from './ControlsMenu.js'
+import CreditsMenu from './CreditsMenu.js'
 
 export default class TitleScreen extends Menu {
     getTitle() {
@@ -30,10 +31,10 @@ export default class TitleScreen extends Menu {
         })
 
         options.push({
-            text: 'Quit',
+            text: 'Credits',
             key: 'l',
             action: () => {
-                this.game.close()
+                this.game.currentMenu = new CreditsMenu(this.game)
             }
         })
         
