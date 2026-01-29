@@ -20,7 +20,12 @@ export default class ControlsMenu extends Menu {
                 action: null
             },
             {
-                text: 'M1 - Shoot',
+                text: 'M1 (Mouse Left Click) - Shoot',
+                key: null,
+                action: null
+            },
+            {
+                text: "G - Grow",
                 key: null,
                 action: null
             },

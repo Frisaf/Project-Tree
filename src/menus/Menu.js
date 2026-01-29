@@ -174,9 +174,14 @@ export default class Menu {
         }
         
         // Rita instruktioner längst ner
-        ctx.fillStyle = '#888888'
-        ctx.font = '18px "Pixelify Sans", sans-serif'
+        ctx.fillStyle = '#e8e8e8'
+        ctx.font = '25px "Pixelify Sans", sans-serif'
+        ctx.shadowColor = "black"
+        ctx.shadowOffsetX = 2
+        ctx.shadowOffsetY = 2
+        ctx.shadowBlur = 3
         ctx.fillText('Use Arrow Keys to navigate, Enter to select', this.game.width / 2, this.game.height - 50)
+        ctx.fillText('Play the game fully zoomed in/fullscreen for the best experience!', 410, 20)
         
         ctx.restore()
     }
