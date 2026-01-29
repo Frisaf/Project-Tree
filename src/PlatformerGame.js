@@ -227,9 +227,13 @@ export default class PlatformerGame extends GameBase {
             return false
         }
         
-        return this.saveManager.save({
+        const saveData = this.saveManager.getSaveInfo()
+
+        if (this.score > saveData.score) {
+            return this.saveManager.save({
             score: this.score,
         })
+        }
     }
 
     update(deltaTime) {
@@ -243,6 +247,7 @@ export default class PlatformerGame extends GameBase {
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
             this.gameState = 'MENU'
+            this.saveGame()
             this.currentMenu = new TitleScreen(this)
             return
         }
@@ -255,7 +260,7 @@ export default class PlatformerGame extends GameBase {
             }
         }
 
-        if (this.player.health === this.player.maxHealth && this.player.stage < 4) {
+        if (this.player.health === this.player.maxHealth && this.player.stage < 3) {
             this.gameState = "GROW_READY"
             
             if (this.inputHandler.keys.has("g") || this.inputHandler.keys.has("G")) {
@@ -274,6 +279,19 @@ export default class PlatformerGame extends GameBase {
                 this.gameState = "PLAYING"
             }
         }
+
+        // if (this.inputHandler.keys.has("b")) {
+        //     this.inputHandler.keys.delete("b")
+        //     this.player.grow()
+        //     this.nextStage()
+
+        //     const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
+        //     const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
+
+        //     this.gun.markedForDeletion = true
+        //     this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage]})
+        //     this.gameState = "PLAYING"
+        // }
         
         // Uppdatera bara om spelet är i PLAYING state
         if (this.gameState !== 'PLAYING' && this.gameState !== "GROW_READY") return

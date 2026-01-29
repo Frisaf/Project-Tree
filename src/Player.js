@@ -209,6 +209,10 @@ export default class Player extends GameObject {
 
     takeDamage(amount) {
         if (this.invulnerable) return
+
+        if (this.game.gameState === "GROW_READY") {
+            this.game.gameState = "PLAYING"
+        }
         
         this.health -= amount
         if (this.health < 0) this.health = 0

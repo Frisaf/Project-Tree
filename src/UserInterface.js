@@ -52,14 +52,14 @@ export default class UserInterface {
     drawGrow(ctx) {
         ctx.save()
 
-        ctx.font = `${this.fontSize}px ${this.fontFamily}`
+        ctx.font = `40px ${this.fontFamily}`
         ctx.fillStyle = this.textColor
         ctx.shadowColor = this.shadowColor
         ctx.shadowOffsetX = 2
         ctx.shadowOffsetY = 2
         ctx.shadowBlur = 3
 
-        ctx.fillText("Press [G] to grow!", 10, 140)
+        ctx.fillText("Press [G] to grow!", 625, 140)
         ctx.restore()
     }
     
