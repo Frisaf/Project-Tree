@@ -10,7 +10,7 @@ export default class ControlsMenu extends Menu {
     getOptions() {
         return [
             {
-                text: 'Arrow Keys/WASD - Move',
+                text: 'Arrow Keys/WAD - Move',
                 key: null,
                 action: null
             },
@@ -21,11 +21,6 @@ export default class ControlsMenu extends Menu {
             },
             {
                 text: 'M1 - Shoot',
-                key: null,
-                action: null
-            },
-            {
-                text: 'S - Save Game',
                 key: null,
                 action: null
             },
@@ -41,6 +36,16 @@ export default class ControlsMenu extends Menu {
                     this.game.gameState = 'MENU'
                     this.game.currentMenu = new TitleScreen(this.game)
                 }
+            },
+            {
+                text: '',
+                key: null,
+                action: null
+            },
+            {
+                text: '-- Shooting decreases your life force! Kill enemies to regain it! --',
+                key: null,
+                action: null
             }
         ]
     }
