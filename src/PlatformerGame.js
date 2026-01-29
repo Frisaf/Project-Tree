@@ -314,7 +314,7 @@ export default class PlatformerGame extends GameBase {
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
             this.gameState = 'MENU'
-            this.currentMenu = new MainMenu(this)
+            this.currentMenu = new TitleScreen(this)
             return
         }
         
