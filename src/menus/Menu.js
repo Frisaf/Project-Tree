@@ -6,6 +6,7 @@ import controlsoptionimage from '../assets/Project Tree/Menu/controls.png'
 import controlsoptionselect from '../assets/Project Tree/Menu/controls2.png'
 import quitoptionimage from '../assets/Project Tree/Menu/quits.png'
 import quitoptionselect from '../assets/Project Tree/Menu/quits2.png'
+
 export default class Menu {
     constructor(game) {
         this.game = game
@@ -121,7 +122,7 @@ export default class Menu {
             ctx.textAlign = 'center'
             ctx.textBaseline = 'middle'
         if (this.title === 'TitleScreen') {
-            ctx.drawImage(this.titletextimage, this.game.width / 2.45, 60, this.game.width / 5, 90)
+            ctx.drawImage(this.titletextimage, this.game.width / 2.8, 60, 500, 231)
         } else {
             ctx.fillText(this.title, this.game.width / 2, 80)
         }
@@ -144,27 +145,33 @@ export default class Menu {
             console.log(displayText) 
             if (option.text === "Start") {
                 if (isSelected) {
-                    ctx.drawImage(this.startselect, this.game.width / 2.20, y + 40, this.game.width / 10, y / 5)
+                    ctx.drawImage(this.startselect, this.game.width / 2.29, y + 200, this.game.width / 8, y / 5)
                 } else {
-                    ctx.drawImage(this.startoption, this.game.width / 2.20, y + 40, this.game.width / 10, y / 5)    
+                    ctx.drawImage(this.startoption, this.game.width / 2.29, y + 200, this.game.width / 8, y / 5)    
                 }
             } else if (option.text === "Controls") {
                 if (isSelected) {
-                    ctx.drawImage(this.controlselect, this.game.width / 2.20, y + 60, this.game.width / 10, y / 6)
+                    ctx.drawImage(this.controlselect, this.game.width / 2.20, y + 200, this.game.width / 10, y / 6)
                 } else {
-                    ctx.drawImage(this.controlsoption, this.game.width / 2.20, y + 60, this.game.width / 10, y / 6)    
+                    ctx.drawImage(this.controlsoption, this.game.width / 2.20, y + 200, this.game.width / 10, y / 6)    
                 }
             } else if (option.text === "Quit") {
                 if (isSelected) {
-                    ctx.drawImage(this.quitselect, this.game.width / 2.12, y + 80, this.game.width / 15, y / 6)
+                    ctx.drawImage(this.quitselect, this.game.width / 2.12, y + 210, this.game.width / 15, y / 6)
                 } else {
-                    ctx.drawImage(this.quitoption, this.game.width / 2.12, y + 80, this.game.width / 15, y / 6)    
+                    ctx.drawImage(this.quitoption, this.game.width / 2.12, y + 210, this.game.width / 15, y / 6)    
                 }
             } else {
                 ctx.fillText(displayText, this.game.width / 2, y)      
             }
             
         })
+
+        const saveData = this.game.saveManager.getSaveInfo()
+
+        ctx.font = '30px "Pixelify Sans", sans-serif'
+        ctx.fillStyle = "white"
+        ctx.fillText(`High score: ${saveData.score}`, 800, this.game.height - 100)
         
         // Rita instruktioner längst ner
         ctx.fillStyle = '#888888'

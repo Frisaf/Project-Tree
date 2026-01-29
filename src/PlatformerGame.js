@@ -228,88 +228,17 @@ export default class PlatformerGame extends GameBase {
         }
         
         return this.saveManager.save({
-            wave: this.currentWave,
             score: this.score,
-            health: this.player.health,
-            maxHealth: this.player.maxHealth,
-            playerX: this.player.x,
-            playerY: this.player.y,
-            playerStage: this.player.stage,
-            playerWidth: this.player.width,
-            playerHeight: this.player.height,
-            shootCooldown: this.player.shootCooldown
         })
-    }
-    /**
-     * Laddar sparat spelläge
-     * @returns {boolean} True om laddning lyckades
-     */
-    loadGame() {
-        const saveData = this.saveManager.load()
-        if (!saveData) {
-            console.warn('No save data found')
-            return false
-        }
-
-        this.loadedFromSave = true
-        
-        // Ladda level först
-        this.currentWave = saveData.wave
-        this.enemiesDefeated = 0
-        this.loadLevel(this.currentLevelIndex)
-        console.log(this.player)
-
-        if (saveData.playerStage === 1) {
-            this.backgrounds = this.currentLevel.createBackgrounds2()
-            this.platforms = this.currentLevel.createPlatforms2()
-        }
-
-        else if (saveData.playerStage === 2) {
-            this.backgrounds = this.currentLevel.createBackgrounds3()
-            this.platforms = this.currentLevel.createPlatforms3()
-        }
-
-        else if (saveData.playerStage === 3) {
-            this.backgrounds = this.currentLevel.createBackgrounds4()
-            this.platforms = this.currentLevel.createPlatforms4()
-        }
-        
-        // Återställ spelarens position och hälsa
-        this.player.x = saveData.playerX
-        this.player.y = saveData.playerY
-        this.player.health = saveData.health
-        this.player.maxHealth = saveData.maxHealth
-        this.player.width = saveData.playerWidth
-        this.player.height = saveData.playerHeight
-        this.player.shootCooldown = saveData.shootCooldown
-        this.player.stage = saveData.playerStage
-        
-        this.player.loadSprite("idle", this.player.playerSprites[saveData.playerStage][0], 2, 200)
-        this.player.loadSprite("run", this.player.playerSprites[saveData.playerStage][1], this.player.playerSprites[saveData.playerStage][4], 100)
-        this.player.loadSprite("jump", this.player.playerSprites[saveData.playerStage][2], 1)
-        this.player.loadSprite("fall", this.player.playerSprites[saveData.playerStage][3], 1)
-        
-        // Återställ progress
-        this.score = saveData.score
-        
-        // Starta spelet
-        this.gameState = 'PLAYING'
-        this.currentMenu = null
-        
-        console.log('Game loaded!')
-        return true
     }
 
     update(deltaTime) {
-
         // Uppdatera menyn om den är aktiv
         if (this.gameState === 'MENU' && this.currentMenu) {
             this.currentMenu.update(deltaTime)
             this.inputHandler.keys.clear() // Rensa keys så de inte läcker till spelet
             return
         }
-
-        
         
         // Kolla Escape för att öppna menyn under spel
         if (this.inputHandler.keys.has('Escape') && this.gameState === 'PLAYING') {
@@ -324,46 +253,6 @@ export default class PlatformerGame extends GameBase {
                 this.restart()
                 return
             }
-        }
-        
-        // Debug: Byt level med N-tangenten (för testning)
-        if (this.inputHandler.keys.has('n') || this.inputHandler.keys.has('N')) {
-            // Ta bort tangenten så den inte triggas flera gånger
-            this.inputHandler.keys.delete('n')
-            this.inputHandler.keys.delete('N')
-            
-            // Gå till nästa level (loopa runt om nödvändigt)
-            this.currentWave++
-            this.loadLevel(this.currentLevelIndex)
-            this.gameState = 'PLAYING'
-            return
-        }
-
-        if (this.inputHandler.keys.has("b")) {
-            this.inputHandler.keys.delete("b")
-            this.player.grow()
-
-            const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
-            const gunHeight = this.gunConfigs[this.player.stage].sourceHeight
-
-            this.gun.markedForDeletion = true
-            this.gun = new Gun(this, this.player.x + this.player.height, this.player.y, gunWidth, gunHeight, {sprite: this.gunConfigs[this.player.stage]})
-
-            this.gameState = "PLAYING"
-            return
-        }
-        
-        // Spara spelet med S-tangenten (endast när spelet körs)
-        if ((this.inputHandler.keys.has('s') || this.inputHandler.keys.has('S')) && this.gameState === 'PLAYING') {
-            // Ta bort tangenten så den inte triggas flera gånger
-            this.inputHandler.keys.delete('s')
-            this.inputHandler.keys.delete('S')
-            return
-        }
-
-        if (this.inputHandler.keys.has("j")) {
-            this.inputHandler.keys.delete("j")
-            this.nextStage()
         }
 
         if (this.player.health === this.player.maxHealth && this.player.stage < 4) {
@@ -555,6 +444,8 @@ export default class PlatformerGame extends GameBase {
             this.waterDrops.forEach(WaterDrop => {
                 WaterDrop.markedForDeletion = true
             })
+
+            this.saveGame()
         }
     }
 
