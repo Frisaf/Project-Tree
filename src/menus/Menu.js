@@ -169,9 +169,11 @@ export default class Menu {
 
         const saveData = this.game.saveManager.getSaveInfo()
 
-        ctx.font = '30px "Pixelify Sans", sans-serif'
-        ctx.fillStyle = "white"
-        ctx.fillText(`High score: ${saveData.score}`, 800, this.game.height - 100)
+        if (saveData.score) {
+            ctx.font = '30px "Pixelify Sans", sans-serif'
+            ctx.fillStyle = "white"
+            ctx.fillText(`High score: ${saveData.score}`, 800, this.game.height - 100)
+        }
         
         // Rita instruktioner längst ner
         ctx.fillStyle = '#888888'
