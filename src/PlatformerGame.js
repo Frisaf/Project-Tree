@@ -7,12 +7,16 @@ import MainMenu from './menus/MainMenu.js'
 import TitleScreen from './menus/TitleScreen.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
+import EnemyArrowIndicator from './EnemyArrowIndicator.js'
 
 // gun sprites
 import startGunSprite from "./assets/Project Tree/gun_start.png"
 import gunSprite2 from "./assets/Project Tree/gun2.png"
 import gunSprite3 from "./assets/Project Tree/gun3.png"
 import gunSprite4 from "./assets/Project Tree/gun4.png"
+
+import mainTheme from "./assets/Project Tree/Audio/Väkst!.mp3"
+import waterDropSfx from "./assets/Project Tree/Audio/waterdrop.wav"
 
 /**
  * PlatformerGame - En konkret implementation av GameBase för plattformsspel
@@ -51,6 +55,9 @@ export default class PlatformerGame extends GameBase {
         // Background arrays (sätts av levels)
         this.backgrounds = []
         this.backgroundObjects = []
+
+        // Enemy Arrow Indicator.
+        this.enemyArrowIndicator = new EnemyArrowIndicator(this)
         
         // Save game system
         this.saveManager = new SaveGameManager('platformer-save')
@@ -77,6 +84,12 @@ export default class PlatformerGame extends GameBase {
                 sourceHeight: 35
             }
         ]
+
+        this.music = new Audio(mainTheme)
+        this.music.volume = 0.3
+        this.music.loop = true
+
+        this.loadedFromSave = false
         
         // Initiera spelet
         this.init()
@@ -139,6 +152,7 @@ export default class PlatformerGame extends GameBase {
         
         // Sätt level data
         this.enemies = levelData.enemies
+        this.enemiesDefeated = 0
         
         // Sätt background data
         this.backgroundObjects = levelData.backgroundObjects
@@ -152,6 +166,8 @@ export default class PlatformerGame extends GameBase {
                 50, 50, 'green'
             )
         }
+        
+        this.music.play().catch(e => console.log('Playing the music failed:', e))
 
         const playerStage = this.player.stage
         const gunWidth = this.gunConfigs[this.player.stage].sourceWidth
@@ -172,10 +188,14 @@ export default class PlatformerGame extends GameBase {
     nextWave() {
         this.currentWave += 1
         this.enemiesDefeated = 0
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
+        
         // Ladda nästa level
         this.loadLevel(this.currentLevelIndex)
         this.gameState = 'PLAYING'
-        console.log(this.currentWave) 
     }
     
     addProjectile(x, y, directionX, directionY, enemyProjectile = false) {
@@ -187,6 +207,11 @@ export default class PlatformerGame extends GameBase {
         this.currentWave = 1, this.enemiesDefeated = 0
         this.currentMenu = null
         this.waterDrops = []
+
+        this.enemies.forEach(enemy => {
+            enemy.stopAudio()
+        })
+        
         this.init()
         this.gameState = 'PLAYING',
         this.player.health = this.player.maxHealth / 2
@@ -195,7 +220,26 @@ export default class PlatformerGame extends GameBase {
     /**
      * Sparar nuvarande spelläge
      */
-    
+    saveGame() {
+        // Kolla att spelaren finns (kan inte spara om spelet inte har startat)
+        if (!this.player) {
+            console.warn('Cannot save: game not started')
+            return false
+        }
+        
+        return this.saveManager.save({
+            wave: this.currentWave,
+            score: this.score,
+            health: this.player.health,
+            maxHealth: this.player.maxHealth,
+            playerX: this.player.x,
+            playerY: this.player.y,
+            playerStage: this.player.stage,
+            playerWidth: this.player.width,
+            playerHeight: this.player.height,
+            shootCooldown: this.player.shootCooldown
+        })
+    }
     /**
      * Laddar sparat spelläge
      * @returns {boolean} True om laddning lyckades
@@ -206,15 +250,44 @@ export default class PlatformerGame extends GameBase {
             console.warn('No save data found')
             return false
         }
+
+        this.loadedFromSave = true
         
         // Ladda level först
-        this.currentLevelIndex = saveData.currentLevelIndex
+        this.currentWave = saveData.wave
+        this.enemiesDefeated = 0
         this.loadLevel(this.currentLevelIndex)
+        console.log(this.player)
+
+        if (saveData.playerStage === 1) {
+            this.backgrounds = this.currentLevel.createBackgrounds2()
+            this.platforms = this.currentLevel.createPlatforms2()
+        }
+
+        else if (saveData.playerStage === 2) {
+            this.backgrounds = this.currentLevel.createBackgrounds3()
+            this.platforms = this.currentLevel.createPlatforms3()
+        }
+
+        else if (saveData.playerStage === 3) {
+            this.backgrounds = this.currentLevel.createBackgrounds4()
+            this.platforms = this.currentLevel.createPlatforms4()
+        }
         
         // Återställ spelarens position och hälsa
         this.player.x = saveData.playerX
         this.player.y = saveData.playerY
         this.player.health = saveData.health
+        this.player.maxHealth = saveData.maxHealth
+        this.player.width = saveData.playerWidth
+        this.player.height = saveData.playerHeight
+        this.player.shootCooldown = saveData.shootCooldown
+        this.player.stage = saveData.playerStage
+        
+        this.player.loadSprite("idle", this.player.playerSprites[saveData.playerStage][0], 2, 200)
+        this.player.loadSprite("run", this.player.playerSprites[saveData.playerStage][1], this.player.playerSprites[saveData.playerStage][4], 100)
+        this.player.loadSprite("jump", this.player.playerSprites[saveData.playerStage][2], 1)
+        this.player.loadSprite("fall", this.player.playerSprites[saveData.playerStage][3], 1)
         
         // Återställ progress
         this.score = saveData.score
@@ -385,6 +458,9 @@ export default class PlatformerGame extends GameBase {
                 if (projectile.intersects(enemy) && !enemy.markedForDeletion && !projectile.enemyProjectile) {
                     if (enemy.health <= 0) {
                         enemy.markedForDeletion = true
+
+                        enemy.stopAudio()
+
                         this.enemiesDefeated += 1
                         projectile.markedForDeletion = true
                         this.dropWater(enemy.x, enemy.y, enemy.drops)
@@ -423,7 +499,13 @@ export default class PlatformerGame extends GameBase {
                         this.projectileX = projectile.x
                     }
                     
-                    if (!projectile.enemyProjectile) this.waterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+                    if (!projectile.enemyProjectile) {
+                        this.waterDrops.push(new WaterDrop(this, this.projectileX, this.projectileY))
+
+                        const waterSfx = new Audio(waterDropSfx)
+                        waterSfx.volume = 0.3
+                        waterSfx.play().catch(e => console.log('Playing the sfx failed:', e))
+                    }
                     projectile.markedForDeletion = true
                 }
             })
@@ -533,5 +615,11 @@ export default class PlatformerGame extends GameBase {
         if (this.currentMenu) {
             this.currentMenu.draw(ctx)
         }
+
+        // Enemy direction arrows (UI layer)
+        this.enemies.forEach(enemy => {
+            this.enemyArrowIndicator.drawArrow(ctx, enemy)
+        })
+
     }
 }

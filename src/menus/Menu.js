@@ -135,7 +135,7 @@ export default class Menu {
             const isSelected = index === this.selectedIndex
             
             // Rita option text
-            ctx.font = '32px Arial'
+            ctx.font = '32px "Pixelify Sans", sans-serif'
             ctx.fillStyle = isSelected ? this.selectedColor : this.optionColor
             
             // Lägg till ">" för vald option
@@ -168,7 +168,7 @@ export default class Menu {
         
         // Rita instruktioner längst ner
         ctx.fillStyle = '#888888'
-        ctx.font = '18px Arial'
+        ctx.font = '18px "Pixelify Sans", sans-serif'
         ctx.fillText('Use Arrow Keys to navigate, Enter to select', this.game.width / 2, this.game.height - 50)
         
         ctx.restore()

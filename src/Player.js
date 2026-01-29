@@ -1,4 +1,6 @@
 import GameObject from './GameObject.js'
+import shootAudio from "./assets/Project Tree/Audio/player_shoot.wav"
+import hitAudio from "./assets/Project Tree/Audio/player_hit.wav"
 
 // Stage 1 sprites
 import idleSprite from "./assets/Project Tree/idle.png"
@@ -58,28 +60,33 @@ export default class Player extends GameObject {
 
         this.stage = 0
         this.playerSprites = [
-            [idleSprite, runSprite, jumpSprite, fallSprite, 2], // stage 1
+            [idleSprite, runSprite, jumpSprite, fallSprite, 3], // stage 1
             [idleSprite2, runSprite2, jumpSprite2, fallSprite2, 2], // stage 2
             [idleSprite3, runSprite3, jumpSprite3, fallSprite3, 3], // stage 3
             [idleSprite4, runSprite4, jumpSprite4, fallSprite4, 2] // stage 4
         ]
+
+        const runFrames = this.playerSprites[this.stage][4]
         
         // Sprite animation system - ladda sprites med olika hastigheter
-        this.loadSprite('idle', idleSprite, 2, 200)  // Långsammare idle
-        this.loadSprite('run', runSprite, 3, 100)     // Snabbare spring
-        this.loadSprite('jump', jumpSprite, 1)
-        this.loadSprite('fall', fallSprite, 1)
+        this.loadSprite("idle", this.playerSprites[this.stage][0], 2, 200) // Långsammare idle
+        this.loadSprite("run", this.playerSprites[this.stage][1], runFrames, 100) // Snabbare spring
+        this.loadSprite("jump", this.playerSprites[this.stage][2], 1)
+        this.loadSprite("fall", this.playerSprites[this.stage][3], 1)
         
         this.currentAnimation = 'idle'
+
+        this.shootAudio = new Audio(shootAudio)
+        this.shootAudio.volume = 0.3
     }
 
     update(deltaTime) {
         // Horisontell rörelse
-        if ((this.game.inputHandler.keys.has('a')) || (this.game.inputHandler.keys.has('A'))) {
+        if (this.game.inputHandler.keys.has('a') || this.game.inputHandler.keys.has('A') || this.game.inputHandler.keys.has('ArrowLeft')) {
             this.velocityX = -this.moveSpeed
             this.directionX = -1
             this.lastDirectionX = -1 // Spara riktning
-        } else if ((this.game.inputHandler.keys.has('d')) || this.game.inputHandler.keys.has('D')) {
+        } else if (this.game.inputHandler.keys.has('d') || this.game.inputHandler.keys.has('D') || this.game.inputHandler.keys.has('ArrowRight')) {
             this.velocityX = this.moveSpeed
             this.directionX = 1
             this.lastDirectionX = 1 // Spara riktning
@@ -89,11 +96,13 @@ export default class Player extends GameObject {
         }
 
         // Hopp - endast om spelaren är på marken
-        if (this.game.inputHandler.keys.has(' ') && this.jumps < 2) {
+        if (this.game.inputHandler.keys.has(' ') && this.jumps < 2 || this.game.inputHandler.keys.has('ArrowUp') && this.jumps < 2 || this.game.inputHandler.keys.has('w') && this.jumps < 2) {
             this.velocityY = this.jumpPower
             this.jumps += 1
             this.isGrounded = false
             this.game.inputHandler.keys.delete(" ")
+            this.game.inputHandler.keys.delete("ArrowUp")
+            this.game.inputHandler.keys.delete("w") || this.game.inputHandler.keys.delete("W") 
         }
 
         if (this.isGrounded) {
@@ -191,6 +200,7 @@ export default class Player extends GameObject {
         const directionY = dy / distance
         
         this.game.addProjectile(centerX, centerY, directionX, directionY)
+        this.shootAudio.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt cooldown
         this.canShoot = false
@@ -202,6 +212,11 @@ export default class Player extends GameObject {
         
         this.health -= amount
         if (this.health < 0) this.health = 0
+
+        const hitSfx = new Audio(hitAudio)
+
+        hitSfx.volume = 0.2
+        hitSfx.play().catch(e => console.log('Playing the sfx failed:', e))
         
         // Sätt invulnerability efter att ha tagit skada
         this.invulnerable = true
@@ -214,11 +229,13 @@ export default class Player extends GameObject {
     }
 
     grow() {
+        console.log(this.stage)
         this.maxHealth *= 2
         this.stage++
         this.width *= 1.25
         this.height *= 1.25
         this.shootCooldown *= 0.7 // Minska cooldown med 30%
+        console.log(this.stage)
         
         const runFrames = this.playerSprites[this.stage][4]
         

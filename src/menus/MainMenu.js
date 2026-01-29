@@ -13,7 +13,7 @@ export default class MainMenu extends Menu {
         if (this.game.saveManager.hasSave()) {
             const saveInfo = this.game.saveManager.getSaveInfo()
             options.push({
-                text: `Continue (Level ${saveInfo.level})`,
+                text: `Continue (wave ${saveInfo.wave}, stage ${saveInfo.playerStage + 1})`,
                 key: 'c',
                 action: () => {
                     this.game.loadGame()
