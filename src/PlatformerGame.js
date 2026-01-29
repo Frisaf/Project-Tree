@@ -4,6 +4,7 @@ import WaterDrop from './WaterDrop.js'
 import Projectile from './Projectile.js'
 import Level1 from './levels/Level1.js'
 import MainMenu from './menus/MainMenu.js'
+import TitleScreen from './menus/TitleScreen.js'
 import SaveGameManager from './SaveGameManager.js'
 import Gun from './Gun.js'
 import EnemyArrowIndicator from './EnemyArrowIndicator.js'
@@ -94,7 +95,7 @@ export default class PlatformerGame extends GameBase {
         this.init()
         
         // Skapa och visa huvudmenyn
-        this.currentMenu = new MainMenu(this)
+        this.currentMenu = new TitleScreen(this)
     }
 
     nextStage() {
@@ -357,8 +358,6 @@ export default class PlatformerGame extends GameBase {
             // Ta bort tangenten så den inte triggas flera gånger
             this.inputHandler.keys.delete('s')
             this.inputHandler.keys.delete('S')
-            
-            this.saveGame()
             return
         }
 
