@@ -10,7 +10,7 @@ export default class CreditsMenu extends Menu {
     getOptions() {
         return [
             {
-                text: 'Directors - Kevin Tornéus, Robbin Eriksson',
+                text: 'Directors - Kevin Tornéus, Robin Eriksson',
                 key: null,
                 action: null
             },
