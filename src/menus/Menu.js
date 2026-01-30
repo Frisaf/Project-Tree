@@ -181,7 +181,6 @@ export default class Menu {
         ctx.shadowOffsetY = 2
         ctx.shadowBlur = 3
         ctx.fillText('Use Arrow Keys to navigate, Enter to select', this.game.width / 2, this.game.height - 50)
-        ctx.fillText('Play the game fully zoomed in/fullscreen for the best experience!', 410, 20)
         
         ctx.restore()
     }

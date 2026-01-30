@@ -13,8 +13,11 @@ export default class InputHandler {
         })
 
         window.addEventListener("mousemove", (event) => {
-            this.mouseX = event.clientX
-            this.mouseY = event.clientY
+            const canvas = document.querySelector("#game")
+            const rect = canvas.getBoundingClientRect()
+
+            this.mouseX = event.clientX - rect.left
+            this.mouseY = event.clientY - rect.top
         })
 
         window.addEventListener('mousedown', (event) => {

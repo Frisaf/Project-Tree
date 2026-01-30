@@ -48,6 +48,11 @@ export default class ControlsMenu extends Menu {
                 action: null
             },
             {
+                text: '-- Aim with your mouse --',
+                key: null,
+                action: null
+            },
+            {
                 text: '-- Shooting decreases your life force! Kill enemies to regain it! --',
                 key: null,
                 action: null
