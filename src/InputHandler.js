@@ -12,8 +12,9 @@ export default class InputHandler {
             this.keys.delete(event.key)
         })
 
+        const canvas = document.querySelector("#game")
+
         window.addEventListener("mousemove", (event) => {
-            const canvas = document.querySelector("#game")
             const rect = canvas.getBoundingClientRect()
 
             this.mouseX = event.clientX - rect.left
