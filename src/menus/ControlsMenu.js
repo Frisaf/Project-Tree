@@ -53,7 +53,7 @@ export default class ControlsMenu extends Menu {
                 action: null
             },
             {
-                text: '-- Shooting decreases your life force! Kill enemies to regain it! --',
+                text: '-- Shooting decreases your life force! Kill enemies and pick up water to regain it! --',
                 key: null,
                 action: null
             }
